@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "xabikos.javascriptsnippets",
+    "yzhang.markdown-all-in-one",
+    "esbenp.prettier-vscode"
+  ]
+}

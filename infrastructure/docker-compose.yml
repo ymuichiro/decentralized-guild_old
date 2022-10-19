@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0.23
+    container_name: mysql_host
+    env_file:
+      - .env
+    volumes:
+      - ./db/conf:/etc/mysql/conf.d/:ro
+      - ./db/logs:/var/log/mysql:rw
+      - mysql:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "mysql",
+          "-pmysql"
+        ]
+      timeout: 20s
+      retries: 10
+    command: --secure-file-priv="/"
+    networks:
+      - app-network
+    ports:
+      - "3306:3306"
+
+  app1:
+    container_name: app1
+    image: ghcr.io/ymuichiro/***********:latest
+    tty: true
+    env_file:
+      - .env
+    networks:
+      - app-network
+    ports:
+      - "1337:1337"
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql:

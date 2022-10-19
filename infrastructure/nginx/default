@@ -1,0 +1,14 @@
+server {
+    server_name api.example.com;
+    location / {
+        proxy_pass    http://localhost:1337/;
+    }
+}
+
+server {
+    server_name example.com;
+    root /var/www/html;
+    location / {
+        proxy_pass      http://localhost:3000;
+    }
+}

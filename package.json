@@ -1,0 +1,18 @@
+{
+  "name": "decentrized-guild",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev server.ts",
+    "open-api": "npm-run-all -p open-api:*",
+    "open-api:frontend": "npx openapi-typescript schema/open-api.yaml --output frontend/src/@types/open-api.ts",
+    "open-api:backend": "npx openapi-typescript schema/open-api.yaml --output backend/src/@types/open-api.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
