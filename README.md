@@ -1,6 +1,6 @@
 # Decentrized Guild
 
-## 開発環境
+## Environment
 
 **IDE**
 ```
