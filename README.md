@@ -46,6 +46,20 @@
   - symbol-sdk@2
   - open-api-generater
 
+**infrastructure**
+```mermaid
+graph LR
+    A[User] -->|SSS Auth| B(Web Client)
+    B --> C{nginx}
+    subgraph container in alibaba cloud
+    C -->|Front| D[Vite App]
+    D -->|Ledger| F
+    C -->|API| E[Express]
+    E -->|Ledger| F[Symbol/NEM]
+    E -->|Database| G[SQLITE3]
+    end
+```
+
 ## Submission description （by akindo）
 
 ■提出プロダクトの審査内容について
