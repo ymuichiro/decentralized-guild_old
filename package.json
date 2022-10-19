@@ -1,18 +1,18 @@
 {
   "name": "decentrized-guild",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "publish a decentralized guild where anyone can order and receive jobs",
   "scripts": {
-    "dev": "ts-node-dev server.ts",
-    "open-api": "npm-run-all -p open-api:*",
-    "open-api:frontend": "npx openapi-typescript schema/open-api.yaml --output frontend/src/@types/open-api.ts",
-    "open-api:backend": "npx openapi-typescript schema/open-api.yaml --output backend/src/@types/open-api.ts"
+    "openapi": "node ./bin/generate-types.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "@types/node": "^18.11.2",
+    "js-yaml": "^4.1.0",
+    "npm-run-all": "^4.1.5",
+    "openapi-typescript": "^5.4.1",
+    "prettier": "^2.7.1"
   }
 }
