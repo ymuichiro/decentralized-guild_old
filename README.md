@@ -1,5 +1,21 @@
 # Decentrized Guild
 
+## Links
+
+**concept**
+https://blockchainauthn-my.sharepoint.com/:p:/g/personal/yuichiro_mukaiyama_blockchainauthn_onmicrosoft_com/EfJbjke4HuxMoeFO9OZJAW4BpQOUTJLL_J0K-l5fqfQjyw?e=ZUWoDv
+
+https://drive.google.com/file/d/1Cq2TB0M-2UKSj4KJbTny6XgueYwXHgCA/view?usp=sharing
+
+**todo（projects）**
+https://github.com/users/ymuichiro/projects/4/views/1
+
+**screen idea（figma）**
+https://www.figma.com/file/gMBKsncyOguhHRZHpJLjk0/D-Guild?node-id=2%3A35
+
+**contract pattern（draw.io）**
+https://drive.google.com/file/d/1N3m7ga_QMO0RP2iIYvSiAm4dO_mkikSQ/view?usp=sharing
+
 ## Environment
 
 **IDE**
@@ -59,6 +75,51 @@ graph LR
     E -->|Database| G[SQLITE3]
     end
 ```
+
+## Minimum component（hackathon）
+
+Account
+
+- evaluation
+- role（Worker, Requester, Guild Owner）
+- Quest（list）
+- balance（xym & mosaic point）
+- Guild（Affiliation）
+
+Work
+
+- Quest Board（Postings, Orders, Rewards）
+- Rating Filter
+
+Guild
+
+- evalutation
+- Quest Board
+- Guild Home Page（link to Community Chat, guild description）
+- fee（to guild owner）
+
+Point
+
+- create transaction
+
+Manage
+
+- Tax（aggregate tx or nem?）
+
+Viewer
+
+- Account
+- Guild
+- Work
+
+## Future compornent
+
+- Senate
+- communication room
+- fund
+- ranking
+- philanthropic rewards
+- Guild Private Funds
 
 ## Submission description （by akindo）
 
