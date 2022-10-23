@@ -52,7 +52,6 @@ export default function ComponentsCheck() {
       <Typography component="h1" variant="h5" fontWeight="bold" textAlign="center" gutterBottom>Quest Board</Typography>
       <QuestCardList items={QUEST_CARD_DATA_SAMPL} />
     </GradientBox>
-    <TextField variant="standard" style={{ border: "2px solid red", padding: "10px" }} />
   </div >
 
 }
