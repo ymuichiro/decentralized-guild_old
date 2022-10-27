@@ -1,5 +1,8 @@
-singleQuote: true
+bracketSpacing: true
+jsxSingleQuote: true
+printWidth: 80
 semi: true
-printWidth: 120
-trailingComma: es5
+singleQuote: true
 tabWidth: 2
+trailingComma: "all"
+useTabs: false
