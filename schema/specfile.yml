@@ -289,7 +289,7 @@ components:
         - $ref: "#/components/schemas/User"
         - type: object
           required:
-            - creatd
+            - created
           properties:
             created:
               type: number
@@ -297,6 +297,8 @@ components:
     Quest:
       type: object
       required:
+        - quest_id
+        - nominate_guild_id
         - transaction_hash
         - title
         - description
@@ -305,6 +307,10 @@ components:
         - worker_public_key
         - status
       properties:
+        quest_id:
+          type: string
+        nominate_guild_id:
+          type: string
         transaction_hash:
           type: string
         title:
@@ -320,18 +326,18 @@ components:
         status:
           type: string
           enum:
-            - YET
-            - PROGRESS
+            - WANTED
+            - WORKING
             - COMPLETED
     QuestTable:
       allOf:
         - $ref: "#/components/schemas/Quest"
         - type: object
           required:
-            - questId
+            - quest_id
             - created
           properties:
-            questId:
+            quest_id:
               type: string
             created:
               type: number
@@ -339,16 +345,19 @@ components:
     Notice:
       type: object
       required:
-        - noticeId
+        - notice_id
         - title
         - body
+        - public_key
         - created
       properties:
-        noticeId:
+        notice_id:
           type: string
         title:
           type: string
         body:
+          type: string
+        public_key:
           type: string
         created:
           type: number

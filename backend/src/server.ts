@@ -1,15 +1,12 @@
-import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
 import helmet from 'helmet';
 import StatusCodes from 'http-status-codes';
 import express, { NextFunction, Request, Response } from 'express';
-import session from 'express-session';
 import 'express-async-errors';
 import baseRouter from './routes/index';
 import logger from 'jet-logger';
 import { CustomError } from './shared/errors';
-import { cookieProps } from './routes/auth-router';
 
 // Constants
 const app = express();
@@ -21,10 +18,6 @@ const app = express();
 // Common middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(cookieProps.secret));
-app.use(
-  session({ secret: cookieProps.secret, resave: false, saveUninitialized: false, cookie: { maxAge: 1000 * 60 * 30 } })
-);
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {
