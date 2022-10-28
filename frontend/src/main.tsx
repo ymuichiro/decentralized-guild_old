@@ -1,15 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseLine from "@mui/material/CssBaseline";
+
+import { RecoilRoot } from 'recoil';
+
 import { theme } from "./styles/theme";
-import App from './App'
+import Root from './Root'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseLine>
-        <App />
+        <RecoilRoot>
+          <Root />
+        </RecoilRoot>
       </CssBaseLine>
     </ThemeProvider>
   </React.StrictMode>
