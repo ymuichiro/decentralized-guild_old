@@ -20,7 +20,7 @@ services:
           "localhost",
           "-u",
           "mysql",
-          "-pmysql"
+          "-pmysql",
         ]
       timeout: 20s
       retries: 10
@@ -59,6 +59,16 @@ services:
     depends_on:
       database:
         condition: service_healthy
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8002:8080"
+    volumes:
+      - ./schema/specfile.yml:/openapi.yaml
+    environment:
+      SWAGGER_JSON: /openapi.yaml
 
 networks:
   primary:
