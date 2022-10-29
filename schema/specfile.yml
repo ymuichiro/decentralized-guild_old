@@ -13,7 +13,7 @@ externalDocs:
   description: Find out more about Decentralized Guild
   url: https://github.com/ymuichiro/decentralized-guild
 servers:
-  - url: http://localhost:3001
+  - url: http://localhost:3001/api
 tags:
   - name: user
     description: add, info, isRegist
@@ -44,18 +44,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserTable"
-        "204":
-          description: Successful & but no content
-          content:
-            application/json:
-              schema:
                 type: object
+                required:
+                  - data
                 properties:
-                  message:
-                    type: string
-                    enum:
-                      - "unregistered"
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/UserTable"
     post:
       tags:
         - user
@@ -73,7 +69,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
   /users:
     get:
       tags:
@@ -86,9 +87,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserTable"
   /quest:
     get:
       tags:
@@ -107,7 +113,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuestTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/QuestTable"
     post:
       tags:
         - quest
@@ -126,7 +139,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuestTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/QuestTable"
   /quests:
     get:
       tags:
@@ -139,9 +157,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/QuestTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/QuestTable"
   /guild/quest:
     get:
       tags:
@@ -150,7 +173,7 @@ paths:
       operationId: getGuildQuest
       parameters:
         - in: query
-          name: public_key
+          name: quest_id
           required: true
           schema:
             type: string
@@ -160,7 +183,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuestTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/QuestTable"
     post:
       tags:
         - guild-quest
@@ -179,7 +209,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuestTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/QuestTable"
   /guild/quests:
     get:
       tags:
@@ -192,9 +227,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/QuestTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/QuestTable"
   /guild:
     get:
       tags:
@@ -213,7 +253,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/GuildTable"
     post:
       tags:
         - guild
@@ -231,7 +278,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GuildTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/GuildTable"
   /guilds:
     get:
       tags:
@@ -244,9 +296,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/GuildTable"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/GuildTable"
   /notices:
     get:
       tags:
@@ -265,9 +322,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Notice"
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Notice"
 components:
   schemas:
     User:
@@ -308,7 +370,7 @@ components:
         - status
       properties:
         quest_id:
-          type: string
+          type: number
         nominate_guild_id:
           type: string
         transaction_hash:
@@ -345,14 +407,11 @@ components:
     Notice:
       type: object
       required:
-        - notice_id
         - title
         - body
         - public_key
         - created
       properties:
-        notice_id:
-          type: string
         title:
           type: string
         body:
@@ -365,7 +424,7 @@ components:
     Guild:
       type: object
       required:
-        - owner_public_key
+        - public_key
         - name
         - icon
       properties:
@@ -382,10 +441,10 @@ components:
         - type: object
           required:
             - guild_id
-            - creatd
+            - created
           properties:
             guild_id:
-              type: string
+              type: number
             created:
               type: number
               description: new Date().getTime()

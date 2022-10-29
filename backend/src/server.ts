@@ -6,7 +6,9 @@ import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 import baseRouter from './routes/index';
 import logger from 'jet-logger';
-import { CustomError } from './shared/errors';
+import cors from 'cors';
+
+import { CustomError } from './services/Errors';
 
 // Constants
 const app = express();
@@ -18,6 +20,7 @@ const app = express();
 // Common middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {

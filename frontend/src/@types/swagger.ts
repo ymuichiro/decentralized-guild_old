@@ -50,7 +50,7 @@ export interface components {
       created: number;
     };
     Quest: {
-      quest_id: string;
+      quest_id: number;
       nominate_guild_id: string;
       transaction_hash: string;
       title: string;
@@ -67,7 +67,6 @@ export interface components {
       created: number;
     };
     Notice: {
-      notice_id: string;
       title: string;
       body: string;
       public_key: string;
@@ -75,21 +74,16 @@ export interface components {
       created: number;
     };
     Guild: {
-      public_key?: string;
+      public_key: string;
       name: string;
       /** @description base64 encoding */
       icon: string;
-    } & {
-      owner_public_key: unknown;
     };
-    GuildTable: components['schemas']['Guild'] &
-      ({
-        guild_id: string;
-        /** @description new Date().getTime() */
-        created?: number;
-      } & {
-        creatd: unknown;
-      });
+    GuildTable: components['schemas']['Guild'] & {
+      guild_id: number;
+      /** @description new Date().getTime() */
+      created: number;
+    };
   };
 }
 
@@ -104,15 +98,8 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['UserTable'];
-        };
-      };
-      /** Successful & but no content */
-      204: {
-        content: {
           'application/json': {
-            /** @enum {string} */
-            message?: 'unregistered';
+            data: components['schemas']['UserTable'] | null;
           };
         };
       };
@@ -123,7 +110,9 @@ export interface operations {
       /** Successful operation */
       200: {
         content: {
-          'application/json': components['schemas']['UserTable'];
+          'application/json': {
+            data: components['schemas']['User'];
+          };
         };
       };
     };
@@ -138,7 +127,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['UserTable'][];
+          'application/json': {
+            data: components['schemas']['UserTable'][];
+          };
         };
       };
     };
@@ -153,7 +144,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['QuestTable'];
+          'application/json': {
+            data: components['schemas']['QuestTable'] | null;
+          };
         };
       };
     };
@@ -163,7 +156,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['QuestTable'];
+          'application/json': {
+            data: components['schemas']['QuestTable'];
+          };
         };
       };
     };
@@ -179,7 +174,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['QuestTable'][];
+          'application/json': {
+            data: components['schemas']['QuestTable'][];
+          };
         };
       };
     };
@@ -187,14 +184,16 @@ export interface operations {
   getGuildQuest: {
     parameters: {
       query: {
-        public_key: string;
+        quest_id: string;
       };
     };
     responses: {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['QuestTable'];
+          'application/json': {
+            data: components['schemas']['QuestTable'] | null;
+          };
         };
       };
     };
@@ -204,7 +203,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['QuestTable'];
+          'application/json': {
+            data: components['schemas']['QuestTable'];
+          };
         };
       };
     };
@@ -220,7 +221,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['QuestTable'][];
+          'application/json': {
+            data: components['schemas']['QuestTable'][];
+          };
         };
       };
     };
@@ -235,7 +238,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['GuildTable'];
+          'application/json': {
+            data: components['schemas']['GuildTable'] | null;
+          };
         };
       };
     };
@@ -245,7 +250,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['GuildTable'];
+          'application/json': {
+            data: components['schemas']['GuildTable'];
+          };
         };
       };
     };
@@ -260,7 +267,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['GuildTable'][];
+          'application/json': {
+            data: components['schemas']['GuildTable'][];
+          };
         };
       };
     };
@@ -275,7 +284,9 @@ export interface operations {
       /** Successful */
       200: {
         content: {
-          'application/json': components['schemas']['Notice'][];
+          'application/json': {
+            data: components['schemas']['Notice'][];
+          };
         };
       };
     };
