@@ -74,7 +74,7 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: "#/components/schemas/User"
+                    $ref: "#/components/schemas/Sccessful"
   /users:
     get:
       tags:
@@ -103,10 +103,10 @@ paths:
       operationId: getQuest
       parameters:
         - in: query
-          name: public_key
+          name: quest_id
           required: true
           schema:
-            type: string
+            type: number
       responses:
         "200":
           description: Successful
@@ -144,7 +144,7 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: "#/components/schemas/QuestTable"
+                    $ref: "#/components/schemas/Sccessful"
   /quests:
     get:
       tags:
@@ -176,7 +176,7 @@ paths:
           name: quest_id
           required: true
           schema:
-            type: string
+            type: number
       responses:
         "200":
           description: Successful
@@ -198,7 +198,7 @@ paths:
       operationId: addGuildQuest
       requestBody:
         required: true
-        description: to blank transaction_hash, transaction_hash
+        description: to blank transaction_hash, transaction_hash & required nominate_guild_id
         content:
           application/json:
             schema:
@@ -214,13 +214,19 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: "#/components/schemas/QuestTable"
+                    $ref: "#/components/schemas/Sccessful"
   /guild/quests:
     get:
       tags:
         - guild-quest
       summary: get guild quest list
       operationId: getGuildQuests
+      parameters:
+        - in: query
+          name: nominate_guild_id
+          required: true
+          schema:
+            type: number
       responses:
         "200":
           description: Successful
@@ -246,7 +252,7 @@ paths:
           name: guild_id
           required: true
           schema:
-            type: string
+            type: number
       responses:
         "200":
           description: Successful
@@ -283,7 +289,7 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: "#/components/schemas/GuildTable"
+                    $ref: "#/components/schemas/Sccessful"
   /guilds:
     get:
       tags:
@@ -332,6 +338,19 @@ paths:
                       $ref: "#/components/schemas/Notice"
 components:
   schemas:
+    Sccessful:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+            - error
+        message:
+          type: string
     User:
       type: object
       required:
@@ -360,21 +379,20 @@ components:
       type: object
       required:
         - quest_id
-        - nominate_guild_id
-        - transaction_hash
         - title
         - description
         - reward
         - requester_public_key
-        - worker_public_key
         - status
       properties:
         quest_id:
           type: number
         nominate_guild_id:
-          type: string
+          type: number
+          nullable: true
         transaction_hash:
           type: string
+          nullable: true
         title:
           type: string
         description:
@@ -385,6 +403,7 @@ components:
           type: string
         worker_public_key:
           type: string
+          nullable: true
         status:
           type: string
           enum:
@@ -400,7 +419,7 @@ components:
             - created
           properties:
             quest_id:
-              type: string
+              type: number
             created:
               type: number
               description: new Date().getTime()
@@ -424,11 +443,11 @@ components:
     Guild:
       type: object
       required:
-        - public_key
+        - owner_public_key
         - name
         - icon
       properties:
-        public_key:
+        owner_public_key:
           type: string
         name:
           type: string

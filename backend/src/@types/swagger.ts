@@ -39,6 +39,11 @@ export interface paths {
 
 export interface components {
   schemas: {
+    Sccessful: {
+      /** @enum {string} */
+      status: 'ok' | 'error';
+      message: string;
+    };
     User: {
       public_key: string;
       name: string;
@@ -51,18 +56,18 @@ export interface components {
     };
     Quest: {
       quest_id: number;
-      nominate_guild_id: string;
-      transaction_hash: string;
+      nominate_guild_id?: number | null;
+      transaction_hash?: string | null;
       title: string;
       description: string;
       reward: number;
       requester_public_key: string;
-      worker_public_key: string;
+      worker_public_key?: string | null;
       /** @enum {string} */
       status: 'WANTED' | 'WORKING' | 'COMPLETED';
     };
     QuestTable: components['schemas']['Quest'] & {
-      quest_id: string;
+      quest_id: number;
       /** @description new Date().getTime() */
       created: number;
     };
@@ -74,7 +79,7 @@ export interface components {
       created: number;
     };
     Guild: {
-      public_key: string;
+      owner_public_key: string;
       name: string;
       /** @description base64 encoding */
       icon: string;
@@ -111,7 +116,7 @@ export interface operations {
       200: {
         content: {
           'application/json': {
-            data: components['schemas']['User'];
+            data: components['schemas']['Sccessful'];
           };
         };
       };
@@ -137,7 +142,7 @@ export interface operations {
   getQuest: {
     parameters: {
       query: {
-        public_key: string;
+        quest_id: number;
       };
     };
     responses: {
@@ -157,7 +162,7 @@ export interface operations {
       200: {
         content: {
           'application/json': {
-            data: components['schemas']['QuestTable'];
+            data: components['schemas']['Sccessful'];
           };
         };
       };
@@ -184,7 +189,7 @@ export interface operations {
   getGuildQuest: {
     parameters: {
       query: {
-        quest_id: string;
+        quest_id: number;
       };
     };
     responses: {
@@ -204,12 +209,12 @@ export interface operations {
       200: {
         content: {
           'application/json': {
-            data: components['schemas']['QuestTable'];
+            data: components['schemas']['Sccessful'];
           };
         };
       };
     };
-    /** to blank transaction_hash, transaction_hash */
+    /** to blank transaction_hash, transaction_hash & required nominate_guild_id */
     requestBody: {
       content: {
         'application/json': components['schemas']['Quest'];
@@ -217,6 +222,11 @@ export interface operations {
     };
   };
   getGuildQuests: {
+    parameters: {
+      query: {
+        nominate_guild_id: number;
+      };
+    };
     responses: {
       /** Successful */
       200: {
@@ -231,7 +241,7 @@ export interface operations {
   getGuild: {
     parameters: {
       query: {
-        guild_id: string;
+        guild_id: number;
       };
     };
     responses: {
@@ -251,7 +261,7 @@ export interface operations {
       200: {
         content: {
           'application/json': {
-            data: components['schemas']['GuildTable'];
+            data: components['schemas']['Sccessful'];
           };
         };
       };

@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS guild (
 
 CREATE TABLE IF NOT EXISTS quest (
   `quest_id`              INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
-  `nominate_guild_id`     TEXT,
+  `nominate_guild_id`     INT,
   `transaction_hash`      TEXT,
   `title`                 TEXT,
   `description`           TEXT,
@@ -76,7 +76,7 @@ INSERT INTO guild (guild_id, owner_public_key, name, icon, created) VALUES (
 
 INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, description, reward, requester_public_key, worker_public_key, status, created ) VALUES (
   1,
-  "ztZzhuBUYvGMIXeBvccMqLdSXRQ=",
+  1,
   "A/zc3GVe2ponTLmUTcepadtit+M=",
   "test quest title A",
   "test quest description A",
@@ -89,7 +89,7 @@ INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, descrip
 
 INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, description, reward, requester_public_key, worker_public_key, status, created ) VALUES (
   2,
-  "ztZzhuBUYvGMIXeBvccMqLdSXRQ=",
+  2,
   "A/zc3GVe2ponTLmUTcepadtit+M=",
   "test quest title B",
   "test quest description B",
@@ -102,7 +102,7 @@ INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, descrip
 
 INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, description, reward, requester_public_key, worker_public_key, status, created ) VALUES (
   3,
-  "",
+  1,
   "A/zc3GVe2ponTLmUTcepadtit+M=",
   "test quest title C test quest title C test quest title C",
   "test quest description C test quest description C test quest description C test quest description C",
@@ -113,9 +113,8 @@ INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, descrip
   now()
 );
 
-INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, description, reward, requester_public_key, worker_public_key, status, created ) VALUES (
+INSERT INTO quest (quest_id, transaction_hash, title, description, reward, requester_public_key, worker_public_key, status, created ) VALUES (
   4,
-  "9uE20+NjdQpI5+oCXW91GW+maZ0=",
   "A/zc3GVe2ponTLmUTcepadtit+M=",
   "test quest title D test quest title D test quest title D",
   "test quest description D test quest description D test quest description D test quest description D",
@@ -128,7 +127,7 @@ INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, descrip
 
 INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, description, reward, requester_public_key, worker_public_key, status, created ) VALUES (
   5,
-  "9uE20+NjdQpI5+oCXW91GW+maZ0=",
+  1,
   "A/zc3GVe2ponTLmUTcepadtit+M=",
   "😭test quest title E😭", 
   "😭test quest description😭",
