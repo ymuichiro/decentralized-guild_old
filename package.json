@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "publish a decentralized guild where anyone can order and receive jobs",
   "scripts": {
+    "container:rebuild": "docker compose down -v && docker compose up -d && docker compose logs -f",
     "openapi": "node ./bin/generate-types.mjs"
   },
   "keywords": [],
