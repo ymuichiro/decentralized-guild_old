@@ -24,7 +24,6 @@ const Join = (): JSX.Element => {
   const navigate = useNavigate();
 
   const handleJoin = () => {
-    //if join is success
     navigate('/dashboard');
   };
 
