@@ -145,6 +145,82 @@ paths:
                 properties:
                   data:
                     $ref: "#/components/schemas/Sccessful"
+    put:
+      tags:
+        - quest
+      summary: put quest
+      operationId: updateQuest
+      requestBody:
+        required: true
+        description: Register the contents of the updated quest（Cannot update transaction hash）
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quest_id
+              properties:
+                quest_id:
+                  type: number
+                nominate_guild_id:
+                  type: number
+                title:
+                  type: string
+                description:
+                  type: string
+                reward:
+                  type: number
+                worker_public_key:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+  /quest/set-hash:
+    post:
+      tags:
+        - quest
+      summary: set transaction hash
+      operationId: setQuestHash
+      requestBody:
+        required: true
+        description: set transaction hash & worker public key when quest recieved. can only be written once
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quest_id
+                - transaction_hash
+                - worker_public_key
+              properties:
+                quest_id:
+                  type: number
+                transaction_hash:
+                  type: string
+                worker_public_key:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+
   /quests:
     get:
       tags:

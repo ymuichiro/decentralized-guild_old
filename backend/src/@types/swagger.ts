@@ -13,7 +13,11 @@ export interface paths {
   };
   '/quest': {
     get: operations['getQuest'];
+    put: operations['updateQuest'];
     post: operations['addQuest'];
+  };
+  '/quest/set-hash': {
+    post: operations['setQuestHash'];
   };
   '/quests': {
     get: operations['getQuests'];
@@ -156,6 +160,31 @@ export interface operations {
       };
     };
   };
+  updateQuest: {
+    responses: {
+      /** Successful */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    /** Register the contents of the updated quest（Cannot update transaction hash） */
+    requestBody: {
+      content: {
+        'application/json': {
+          quest_id: number;
+          nominate_guild_id?: number;
+          title?: string;
+          description?: string;
+          reward?: number;
+          worker_public_key?: string;
+        };
+      };
+    };
+  };
   addQuest: {
     responses: {
       /** Successful */
@@ -171,6 +200,28 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['Quest'];
+      };
+    };
+  };
+  setQuestHash: {
+    responses: {
+      /** Successful */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    /** set transaction hash & worker public key when quest recieved. can only be written once */
+    requestBody: {
+      content: {
+        'application/json': {
+          quest_id: number;
+          transaction_hash: string;
+          worker_public_key: string;
+        };
       };
     };
   };
