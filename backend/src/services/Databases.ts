@@ -98,6 +98,23 @@ export class Quest extends Database {
     const res = await this.query<{ counter: number }[]>(query);
     return res[0].counter;
   }
+  /** Register QuestID on BlockchainNW when ordering Quest. TransactionHash at that time */
+  static async setWorkerAndTransactionHash(quest_id: number, transaction_hash: string, worker_public_key: string) {
+    const query = 'UPDATE quest SET transaction_hash = ?, worker_public_key = ? WHERE quest_id = ?';
+    return await this.query(query, transaction_hash, worker_public_key, quest_id);
+  }
+  // prettier-ignore
+  static async update(quest_id:number, field:Pick<components['schemas']['Quest'], 'nominate_guild_id' | 'title' | 'description' | 'reward'>){
+    const query = 'UPDATE quest SET nominate_guild_id = ?, title = ?, description = ?, reward = ? WHERE quest_id = ?';
+    return await this.query(
+      query,
+      field.nominate_guild_id,
+      field.title,
+      field.description,
+      field.reward,
+      quest_id,
+    )
+  }
   // prettier-ignore
   static async insert(field: Pick<components['schemas']['Quest'], 'nominate_guild_id' | 'title' | 'description' | 'reward' | 'requester_public_key'>) {
     const query = 'INSERT INTO quest (nominate_guild_id, title, description, reward, requester_public_key, status, created) VALUES (?, ?, ?, ?, ?, ?, now())';
