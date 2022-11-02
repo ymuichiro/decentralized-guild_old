@@ -3,7 +3,7 @@
  */
 export interface QuestModel {
   id: string;
-  info: QuestInfoModel
+  info: QuestInfoModel;
 }
 
 /**
@@ -14,4 +14,10 @@ export interface QuestInfoModel {
   description: string;
   reward: number;
   imagePath: string;
+}
+
+export enum QuestStatus {
+  WANTED = 'WANTED',
+  WORKING = 'WORKING',
+  COMPLETED = 'COMPLETED',
 }

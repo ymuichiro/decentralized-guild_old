@@ -4,7 +4,16 @@
   "description": "publish a decentralized guild where anyone can order and receive jobs",
   "scripts": {
     "container:rebuild": "docker compose down -v && docker compose up -d && docker compose logs -f",
-    "openapi": "node ./bin/generate-types.mjs"
+    "openapi": "node ./bin/generate-types.mjs",
+    "installs": "run-p install:*",
+    "install:front": "docker exec guild-backend bash -c 'cd /workspace/frontend && yarn install'",
+    "install:back": "docker exec guild-backend bash -c 'cd /workspace/backend && yarn install'",
+    "dev": "run-p dev:*",
+    "dev:front": "docker exec guild-backend bash -c 'cd /workspace/frontend && yarn run dev'",
+    "dev:back": "docker exec guild-backend bash -c 'cd /workspace/backend && yarn run dev'",
+    "build": "run-p build:*",
+    "build:front": "docker exec guild-backend bash -c 'cd /workspace/frontend && yarn run build'",
+    "build:back": "docker exec guild-backend bash -c 'cd /workspace/backend && yarn run build'"
   },
   "keywords": [],
   "author": "",
