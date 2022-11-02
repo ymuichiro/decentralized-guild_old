@@ -2,6 +2,7 @@ version: "3"
 services:
   database:
     image: mysql:8.0.23
+    platform: linux/amd64
     container_name: guild-database
     environment:
       - MYSQL_ROOT_HOST=${DATABASE_HOST}
@@ -48,9 +49,12 @@ services:
     tty: true
     ports:
       - "3001:3001"
-      - "3000:3000"
+      - "5173:5173"
     volumes:
       - ./:/workspace
+      - ./node_modules:/workspace/node_modules
+      - ./frontend/node_modules:/workspace/frontend/node_modules
+      - ./backend/node_modules:/workspace/backend/node_modules
     working_dir: /workspace
     entrypoint:
       - sh
@@ -62,6 +66,7 @@ services:
 
   swagger-ui:
     image: swaggerapi/swagger-ui
+    platform: linux/amd64
     container_name: "swagger-ui"
     ports:
       - "8002:8080"
