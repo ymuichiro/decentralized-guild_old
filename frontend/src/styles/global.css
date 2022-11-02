@@ -16,3 +16,17 @@ body,
 *:after {
   box-sizing: inherit;
 }
+
+/* ScrollBar Design */
+::-webkit-scrollbar {
+  width: 4px;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #828793;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-track {
+  background-color: #666970;
+  border-radius: 2px;
+}

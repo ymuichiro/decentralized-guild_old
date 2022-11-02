@@ -64,14 +64,14 @@ const Dashboard = (): JSX.Element => {
             <img src='/assets/logo/symbol-logo-watermark.svg' height={24} />
           </div>
         </Grid>
-        <Grid xs={6} md={9}>
-          <div style={{ display: 'flex', flexDirection: 'row', gap: 24 }}>
-            <p>Symbol DAO World</p>
-            <div>
-              <p>100,000 GDP / day</p>
-              <p>100 user / day</p>
-            </div>
-          </div>
+        <Grid
+          xs={6}
+          md={9}
+          display='flex'
+          flexDirection='column'
+          justifyContent='center'
+          alignItems='center'
+        >
           <Board title='Dashboard' />
         </Grid>
       </Grid>

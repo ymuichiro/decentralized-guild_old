@@ -14,7 +14,7 @@ const MosaicBox = ({
   divisibility,
   mosaic,
 }: MosaicBoxProps): JSX.Element => {
-  const fontSize = size === '2x' ? 24 : 18;
+  const fontSize = size === '2x' ? 20 : 16;
   return (
     <div
       style={{
