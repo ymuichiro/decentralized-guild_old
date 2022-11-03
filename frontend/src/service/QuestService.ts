@@ -1,6 +1,8 @@
-import { createRecievedOrderAggregateTransaction } from '../contracts/createRecievedOrderAggregateTransaction';
+import { recievedQuestAggregateTransaction } from '../contracts/recievedQuestAggregateTransaction';
+import { completeOrderTransaction } from '../contracts/completeOrderTransaction';
 import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
+import { Evaluation } from '../models/Quest';
 import SystemService from './SystemService';
 
 export default class QuestService extends SystemService {
@@ -18,7 +20,7 @@ export default class QuestService extends SystemService {
   /**
    * クエストを受注する
    */
-  public static async receivedOrder(
+  public static async receivedQuest(
     contractId: string,
     requesterPublicKey: string,
     fee: SystemFee,
@@ -28,7 +30,7 @@ export default class QuestService extends SystemService {
     const workerPublicKey = this.getActivePublicKey();
     const systemPublicKey = this.getSystemPublicKey();
 
-    const aggregateTransaction = await createRecievedOrderAggregateTransaction(
+    const aggregateTransaction = recievedQuestAggregateTransaction(
       contractId,
       requesterPublicKey,
       workerPublicKey,
@@ -37,16 +39,48 @@ export default class QuestService extends SystemService {
       network,
     );
 
-    // 本番フロント用
-    //setTransaction(aggregateTransaction);
-    //const signedAggTransaction = await requestSign();
-
     // アグボンアナウンス --> ハッシュロック
     const signedTransaction = this.sendAggregateTransaction(
       aggregateTransaction,
       node,
       network,
     );
+
+    // ここでDBのQuestを編集する --> API を用意しておくのでAPIを叩く想定で
+    // ハッシュを登録しておくと後ほど検索に便利
+    // insert...quest table, hash colom -> signedAggTransaction.hash
+    // 書き方全然分からないのでこんなイメージでｗ
+  }
+
+  /**
+   * クエストを完了する
+   */
+   public static async completeQuest(
+    workerPublicKey: string,
+    reward: number,
+    requesterJudgement: Evaluation,
+    workerJudgement: Evaluation,
+    fee: SystemFee,
+    node: NodeInfo,
+    network: Network,
+  ) {
+
+    const aggregateTransaction = completeOrderTransaction(
+      this.getActivePublicKey(),
+      workerPublicKey,
+      this.getGuildOwnerPublicKey(),
+      this.getSystemPublicKey(),
+      reward,
+      this.getWrpMosaicId(),
+      this.getGuildPointMosaicId(),
+      requesterJudgement,
+      workerJudgement,
+      fee,
+      network
+    );
+
+    // アグボンアナウンス --> ハッシュロック
+    const signedTransaction = this.sign(aggregateTransaction);
 
     // ここでDBのQuestを編集する --> API を用意しておくのでAPIを叩く想定で
     // ハッシュを登録しておくと後ほど検索に便利

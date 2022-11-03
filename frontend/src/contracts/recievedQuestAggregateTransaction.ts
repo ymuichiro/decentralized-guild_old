@@ -19,7 +19,7 @@ import { Network } from "../models/Network";
  * @param network
  * @returns
  */
-export const createRecievedOrderAggregateTransaction = async function (
+export const recievedQuestAggregateTransaction = function (
   contractId: string,
   requesterPublicKey: string,
   workerPublicKey: string,

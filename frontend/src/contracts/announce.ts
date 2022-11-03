@@ -5,6 +5,21 @@ import { Network, NodeInfo } from "../models/Network";
 import { filter, delay, mergeMap } from "rxjs";
 
 /**
+ * トランザクションをアナウンスする
+ */
+export const announceTransaction = async function (
+  signedTransaction: SignedTransaction,
+  nodeInfo: NodeInfo,
+) {
+  const repositoryFactory = new RepositoryFactoryHttp(nodeInfo.url);
+  const transactionHttp = repositoryFactory.createTransactionRepository();
+  transactionHttp.announce(signedTransaction).subscribe({
+    next: (x) => console.log(x),
+    error: (err) => console.error(err),
+  });
+};
+
+/**
  * アグリゲートボンデッドトランザクションをアナウンスする
  */
 export const announceAggregateBonded = async function (
