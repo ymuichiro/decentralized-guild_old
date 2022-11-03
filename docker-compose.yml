@@ -4,13 +4,11 @@ services:
     image: mysql:8.0.23
     platform: linux/amd64
     container_name: guild-database
+    env_file:
+      - .env
     environment:
-      - MYSQL_ROOT_HOST=${DATABASE_HOST}
-      - MYSQL_DATABASE=${DATABASE_NAME}
-      - MYSQL_USER=${DATABASE_USER_NAME}
-      - MYSQL_PASSWORD=${DATABASE_USER_PASS}
+      - MYSQL_ROOT_HOST=%
       - MYSQL_RANDOM_ROOT_PASSWORD="yes"
-      - TZ=${DATABASE_TZ}
     healthcheck:
       test:
         [
@@ -21,7 +19,7 @@ services:
           "localhost",
           "-u",
           "mysql",
-          "-pmysql",
+          "-pmysql"
         ]
       timeout: 20s
       retries: 10
@@ -35,10 +33,11 @@ services:
       - mysql:/var/lib/mysql
     networks:
       - primary
-
   backend:
     image: node:16
     container_name: guild-backend
+    env_file:
+      - .env
     environment:
       - DATABASE_HOST=${APP_DATABASE_HOST}
       - DATABASE_NAME=${DATABASE_NAME}

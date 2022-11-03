@@ -1,11 +1,13 @@
-version: '3'
-
+version: "3"
 services:
   db:
     image: mysql:8.0.23
     container_name: mysql_host
     env_file:
       - .env
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_RANDOM_ROOT_PASSWORD="yes"
     volumes:
       - ./db/conf:/etc/mysql/conf.d/:ro
       - ./db/logs:/var/log/mysql:rw
@@ -20,7 +22,7 @@ services:
           "localhost",
           "-u",
           "mysql",
-          "-pmysql"
+          "-pmysql",
         ]
       timeout: 20s
       retries: 10
@@ -29,25 +31,23 @@ services:
       - app-network
     ports:
       - "3306:3306"
-
-  app1:
-    container_name: app1
-    image: ghcr.io/ymuichiro/***********:latest
+  app:
+    container_name: app
+    image: ghcr.io/ymuichiro/decentralized-guild:latest
     tty: true
     env_file:
       - .env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     networks:
       - app-network
     ports:
-      - "1337:1337"
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       db:
         condition: service_healthy
-
 networks:
   app-network:
     driver: bridge
-
 volumes:
   mysql:
