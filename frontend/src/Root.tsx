@@ -6,6 +6,8 @@ import Dashboard from '@pages/app/Dashboard';
 
 import './styles/main.css';
 
+import Test from '@pages/Test';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -16,8 +18,8 @@ const router = createBrowserRouter([
     element: <Join />,
   },
   {
-    path: '/dashboard',
-    element: <Dashboard />,
+    path: '/test',
+    element: <Test />,
   },
 ]);
 

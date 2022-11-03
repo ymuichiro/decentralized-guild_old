@@ -80,11 +80,9 @@ export default class QuestService extends SystemService {
     );
 
     // アグボンアナウンス --> ハッシュロック
-    const signedTransaction = this.sign(aggregateTransaction);
+    const signedTransaction = await this.sign(aggregateTransaction);
 
     // ここでDBのQuestを編集する --> API を用意しておくのでAPIを叩く想定で
-    // ハッシュを登録しておくと後ほど検索に便利
-    // insert...quest table, hash colom -> signedAggTransaction.hash
-    // 書き方全然分からないのでこんなイメージでｗ
+    // Questステータスを完了とする
   }
 }

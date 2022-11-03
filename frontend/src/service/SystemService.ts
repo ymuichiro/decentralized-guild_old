@@ -4,9 +4,9 @@ import {
   requestSign,
   setTransaction,
   requestSignWithCosignatories } from 'sss-module';
-import { Account } from 'symbol-sdk/dist/src/model/account';
+import { Account, PublicAccount } from 'symbol-sdk/dist/src/model/account';
 import { TEST_DATA } from '../config';
-import { announceAggregateBonded } from '../contracts/announce';
+import { announceAggregateBonded, announceTransaction } from '../contracts/announce';
 import { hashLockTransaction } from '../contracts/hashLockTransaction'
 import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
@@ -14,7 +14,11 @@ import {
   AggregateTransaction,
   SignedTransaction,
   Transaction,
+  CosignatureSignedTransaction,
+  AggregateTransactionCosignature,
+  TransactionType,
 } from 'symbol-sdk/dist/src/model/transaction';
+import { apiClient } from './ApiService';
 
 export default class SystemService {
   protected constructor() {}
@@ -152,6 +156,35 @@ export default class SystemService {
       }, 1000);
     });
   }
+
+  /**
+   * システムの連署を自動的に取得し、アナウンスまで行う
+   */
+
+  /*
+   protected static async sendWithCosigBySystemTransaction(
+    signedTransaction: SignedTransaction,
+    node: NodeInfo,
+    network: Network,
+  ) {
+    const cosignatureSignedTransaction: CosignatureSignedTransaction = 
+      await (await apiClient.post('api/cosig', {signedTransaction: signedTransaction})).data;
+    const signedAggregateTransactionNotComplete = AggregateTransaction.createFromPayload(signedTransaction.payload);
+    const aggregateTransactionCosignature = 
+      new AggregateTransactionCosignature(
+        cosignatureSignedTransaction.signature,
+        PublicAccount.createFromPublicKey(cosignatureSignedTransaction.signerPublicKey, signedAggregateTransactionNotComplete.networkType)
+      );
+    const completeAggregate = signedAggregateTransactionNotComplete.addCosignatures([aggregateTransactionCosignature]);
+    const hash = 
+      Transaction.createTransactionHash(
+        completeAggregate.serialize(),
+        Array.prototype.slice.call(Buffer.from(TEST_DATA.NETWORK.generationHash, 'hex'), 0)
+      );
+    const signedCompleteTransaction = new SignedTransaction(completeAggregate.serialize(), hash, signedTransaction.signerPublicKey, TransactionType.AGGREGATE_COMPLETE, network.type);
+    announceTransaction(signedCompleteTransaction, node);
+  }
+*/
 
   /**
    * トランザクションにSSSで署名し、SignedTransactionを返す
