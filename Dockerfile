@@ -8,9 +8,9 @@ RUN \
   && yarn --cwd frontend install \
   && yarn --cwd backend install \
   && yarn --cwd frontend build \
-  && yarn --cwd backend build \
-  && mkdir ./backend/dist/views \
-  && mv ./frontend/dist/** ./backend/dist/views
+  && yarn --cwd backend build
+
+RUN rm -rf ./backend/dist/views/** && mv -f ./frontend/dist/** ./backend/dist/views
 
 EXPOSE 3001
 CMD [ "node", "./backend/dist/index.js" ]
