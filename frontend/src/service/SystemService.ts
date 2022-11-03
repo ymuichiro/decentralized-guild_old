@@ -1,7 +1,12 @@
-import { getActivePublicKey } from 'sss-module';
+import { 
+  getActivePublicKey,
+  getActiveAccountToken,
+  requestSign,
+  setTransaction,
+  requestSignWithCosignatories } from 'sss-module';
 import { Account } from 'symbol-sdk/dist/src/model/account';
 import { TEST_DATA } from '../config';
-import { announceAggregateBonded } from '../contracts/announceAggregateBonded';
+import { announceAggregateBonded } from '../contracts/announce';
 import { hashLockTransaction } from '../contracts/hashLockTransaction'
 import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
@@ -27,6 +32,13 @@ export default class SystemService {
   }
 
   /**
+   * ギルドオーナーアカウントのパブリックキーを取得します。
+   */
+   protected static getGuildOwnerPublicKey(): string {
+    return TEST_DATA.GUILD_OWNER.KEY.PUBLIC;
+  }
+
+  /**
    * システム手数料を取得する。本番環境の場合、システムより徴収する
    */
   protected static async getSystemFees(): Promise<SystemFee> {
@@ -38,14 +50,29 @@ export default class SystemService {
   }
 
   /**
+   * WRPモザイクIDを取得する。
+   */
+   protected static getWrpMosaicId(): string {
+    return TEST_DATA.SYSTEM.WRP_MOSAIC_ID;
+  }
+
+  /**
+   * ギルドポイントモザイクIDを取得する。
+   */
+   protected static getGuildPointMosaicId(): string {
+    return TEST_DATA.SYSTEM.GUILD_POINT_MOSAIC_ID;
+  }
+
+  /**
    * SSS よりトークンを取得する
    */
   protected static async getActiveAccountToken(): Promise<string> {
-    // if(process.env.NODE_ENV === "production"){ // TODO: 別途実装
-    // return await getActiveAccountToken("TEST_DATA.SYSTEM.KEY.PUBLIC");
-    // }else {
-    return TEST_DATA.AUTH.TOKEN;
-    // }
+    if (process.env.SYSTEM_PUBLIC_KEY) {
+      return await getActiveAccountToken(process.env.SYSTEM_PUBLIC_KEY);
+    }
+    throw new Error(
+      'System Error: `process.env.SYSTEM_PUBLIC_KEY` is not defined.',
+    );
   }
 
   /**
@@ -53,11 +80,7 @@ export default class SystemService {
    * SSS に登録されているアカウントの公開鍵を取得します。
    */
   protected static getActivePublicKey() {
-    if (process.env.NODE_ENV === 'production') {
-      return getActivePublicKey();
-    } else {
-      return TEST_DATA.WORKER.KEY.PUBLIC;
-    }
+    return getActivePublicKey();
   }
 
   /**
@@ -71,17 +94,9 @@ export default class SystemService {
     node: NodeInfo,
     network: Network,
   ) {
-    // if (process.env.NODE_ENV === "production") {
-    // TODO: どうやって該当のアカウントを取得する？署名する？
-    // } else {
-    const applicantAccount = Account.createFromPrivateKey(
-      TEST_DATA.WORKER.KEY.PRIVATE,
-      network.type,
-    );
-    const singedTransaction = applicantAccount.sign(
-      transaction,
-      network.generationHash,
-    );
+    // アグリゲートトランザクションのSSSへのセット、署名
+    setTransaction(transaction);
+    const singedTransaction = await requestSign();
 
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
@@ -90,15 +105,10 @@ export default class SystemService {
           network,
         );
 
-        // 本番フロント用
-        //setTransaction(hashlockTransaction);
-        //const signedHashLockTransaction = await requestSign();
+        // ハッシュロックトランザクションのSSSへのセット、署名
+        setTransaction(hashlockTransaction);
+        const signedHashLockTransaction = await requestSign();
 
-        // テスト用
-        const signedHashLockTransaction = applicantAccount.sign(
-          hashlockTransaction,
-          network.generationHash,
-        );
         await announceAggregateBonded(
           singedTransaction,
           signedHashLockTransaction,
@@ -111,27 +121,16 @@ export default class SystemService {
   }
 
   /**
-   * マルチシグ向け。アナウンスまで行う
+   * 連署者のアカウントを取得可能時に利用。アナウンスまで行う
    */
-  protected static async sendToCosigTransaction(
+  protected static async sendWithCosigTransaction(
     transaction: AggregateTransaction,
-    guildOwnerPrivateKey: string,
+    cosignature: Account,
     node: NodeInfo,
     network: Network,
   ) {
-    const establisher = Account.createFromPrivateKey(
-      TEST_DATA.WORKER.KEY.PRIVATE,
-      network.type,
-    );
-    const guildOwner = Account.createFromPrivateKey(
-      guildOwnerPrivateKey,
-      network.type,
-    );
-    const signedAggTransaction = establisher.signTransactionWithCosignatories(
-      transaction,
-      [guildOwner],
-      network.generationHash,
-    );
+    setTransaction(transaction);
+    const signedAggTransaction = await requestSignWithCosignatories([cosignature]);
 
     // アグボンはハッシュロックも署名が必要なため二度SSSで署名が必要。少しラグを設けないとバグるためのsetTimeout
     return await new Promise<SignedTransaction>((resolve) => {
@@ -140,15 +139,9 @@ export default class SystemService {
           signedAggTransaction,
           network,
         );
-        // 本番フロント用
-        //setTransaction(hashlockTransaction);
-        //const signedHashLockTransaction = await requestSign();
+        setTransaction(hashlockTransaction);
+        const signedHashLockTransaction = await requestSign();
 
-        // テスト用
-        const signedHashLockTransaction = establisher.sign(
-          hashlockTransaction,
-          network.generationHash,
-        );
         await announceAggregateBonded(
           signedAggTransaction,
           signedHashLockTransaction,
@@ -158,5 +151,15 @@ export default class SystemService {
         resolve(signedHashLockTransaction);
       }, 1000);
     });
+  }
+
+  /**
+   * トランザクションにSSSで署名し、SignedTransactionを返す
+   */
+  protected static async sign(
+    transaction: Transaction
+  ): Promise<SignedTransaction> {
+    setTransaction(transaction);
+    return await requestSign();
   }
 }
