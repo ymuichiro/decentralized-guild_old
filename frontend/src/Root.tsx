@@ -4,7 +4,7 @@ import Index from '@pages/Index';
 import Join from '@pages/login/Join';
 import Dashboard from '@pages/app/Dashboard';
 
-import './styles/global.css';
+import './styles/main.css';
 
 const router = createBrowserRouter([
   {
