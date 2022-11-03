@@ -6,12 +6,7 @@ type Schema = components['schemas'];
 class Database {
   protected constructor() {}
   static async query<T>(sql: string, ...values: (string | number | boolean | undefined | null)[]): Promise<T> {
-    const {
-      DATABASE_HOST: host,
-      DATABASE_USER_NAME: user,
-      DATABASE_NAME: database,
-      DATABASE_USER_PASS: password,
-    } = process.env;
+    const { DATABASE_HOST: host, MYSQL_USER: user, MYSQL_DATABASE: database, MYSQL_PASSWORD: password } = process.env;
     const connection = mysql.createConnection({ host, user, database, password });
     try {
       const result = new Promise<T>((resolve, reject) => {
