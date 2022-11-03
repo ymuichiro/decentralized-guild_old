@@ -1,0 +1,83 @@
+version: "3"
+services:
+  database:
+    image: mysql:8.0.23
+    platform: linux/amd64
+    container_name: guild-database
+    environment:
+      - MYSQL_ROOT_HOST=${DATABASE_HOST}
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER_NAME}
+      - MYSQL_PASSWORD=${DATABASE_USER_PASS}
+      - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+      - TZ=${DATABASE_TZ}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "mysql",
+          "-pmysql",
+        ]
+      timeout: 20s
+      retries: 10
+    command: --secure-file-priv="/"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/conf:/etc/mysql/conf.d/:ro
+      - ./db/logs:/var/log/mysql:rw
+      - ./db/sql/:/docker-entrypoint-initdb.d/:ro
+      - mysql:/var/lib/mysql
+    networks:
+      - primary
+
+  backend:
+    image: node:16
+    container_name: guild-backend
+    environment:
+      - DATABASE_HOST=${APP_DATABASE_HOST}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USER_NAME=${DATABASE_USER_NAME}
+      - DATABASE_USER_PASS=${DATABASE_USER_PASS}
+      - DATABASE_TZ=${DATABASE_TZ}
+      - CHOKIDAR_USEPOLLING=true
+    tty: true
+    ports:
+      - "3001:3001"
+      - "5173:5173"
+    volumes:
+      - ./:/workspace
+      - ./node_modules:/workspace/node_modules
+      - ./frontend/node_modules:/workspace/frontend/node_modules
+      - ./backend/node_modules:/workspace/backend/node_modules
+    working_dir: /workspace
+    entrypoint:
+      - sh
+    networks:
+      - primary
+    depends_on:
+      database:
+        condition: service_healthy
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    platform: linux/amd64
+    container_name: "swagger-ui"
+    ports:
+      - "8002:8080"
+    volumes:
+      - ./schema/specfile.yml:/openapi.yaml
+    environment:
+      SWAGGER_JSON: /openapi.yaml
+
+networks:
+  primary:
+    driver: bridge
+
+volumes:
+  mysql:

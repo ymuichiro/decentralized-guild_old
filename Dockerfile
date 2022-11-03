@@ -1,6 +1,16 @@
-FROM node:16.15
+FROM node:16
 
 COPY . /workspace
 WORKDIR /workspace
-EXPOSE 3000
-CMD [ "npm" , "run" , "run" ]
+
+RUN \
+  yarn install \
+  && yarn --cwd frontend install \
+  && yarn --cwd backend install \
+  && yarn --cwd frontend build \
+  && yarn --cwd backend build
+
+RUN rm -rf ./backend/dist/views/** && mv -f ./frontend/dist/** ./backend/dist/views
+
+EXPOSE 3001
+CMD [ "node", "./backend/dist/index.js" ]
