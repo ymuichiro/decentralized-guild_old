@@ -10,7 +10,7 @@ RUN \
   && yarn --cwd frontend build \
   && yarn --cwd backend build
 
-RUN rm -rf ./backend/dist/views/** && mv -f ./frontend/dist/** ./backend/dist/views
+RUN rm -rf ./backend/dist/views && mkdir ./backend/dist/views && mv -f ./frontend/dist/** ./backend/dist/views
 
 EXPOSE 3001
 CMD [ "node", "./backend/dist/index.js" ]
