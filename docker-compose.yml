@@ -21,7 +21,7 @@ services:
           "localhost",
           "-u",
           "mysql",
-          "-pmysql",
+          "-pmysql"
         ]
       timeout: 20s
       retries: 10
@@ -47,9 +47,6 @@ services:
       - DATABASE_TZ=${DATABASE_TZ}
       - CHOKIDAR_USEPOLLING=true
     tty: true
-    ports:
-      - "3001:3001"
-      - "5173:5173"
     volumes:
       - ./:/workspace
       - ./node_modules:/workspace/node_modules
