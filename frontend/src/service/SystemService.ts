@@ -2,7 +2,7 @@ import { getActivePublicKey } from 'sss-module';
 import { Account } from 'symbol-sdk/dist/src/model/account';
 import { TEST_DATA } from '../config';
 import { announceAggregateBonded } from '../contracts/announceAggregateBonded';
-import { createJoinHashLockTransaction } from '../contracts/createJoinHashLockTransaction';
+import { hashLockTransaction } from '../contracts/hashLockTransaction'
 import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
 import {
@@ -85,7 +85,7 @@ export default class SystemService {
 
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
-        const hashlockTransaction = await createJoinHashLockTransaction(
+        const hashlockTransaction = await hashLockTransaction(
           singedTransaction,
           network,
         );
@@ -136,7 +136,7 @@ export default class SystemService {
     // アグボンはハッシュロックも署名が必要なため二度SSSで署名が必要。少しラグを設けないとバグるためのsetTimeout
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
-        const hashlockTransaction = await createJoinHashLockTransaction(
+        const hashlockTransaction = await hashLockTransaction(
           signedAggTransaction,
           network,
         );
