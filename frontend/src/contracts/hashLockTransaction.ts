@@ -11,7 +11,7 @@ import {
 /**
  * ハッシュロックトランザクションを生成する
  */
-export const createJoinHashLockTransaction = async function (
+export const hashLockTransaction = async function (
   signedAggTransaction: SignedTransaction,
   network: Network
 ): Promise<LockFundsTransaction> {
