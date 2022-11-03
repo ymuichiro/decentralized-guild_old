@@ -1,0 +1,26 @@
+name: Publish Container image
+on: 
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  main:
+    name: Push Docker image to Github Container Registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - name: Login to Docker
+        run: echo $CR_PAT | docker login ghcr.io -u ${OWNER,,} --password-stdin
+        env:
+          CR_PAT: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+      - name: Push to GitHub Container Registry
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest
