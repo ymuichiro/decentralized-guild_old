@@ -95,6 +95,40 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/UserTable"
+  /user/verify:
+    post:
+      tags:
+        - user
+      summary: verify user
+      operationId: verifyUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - public_key
+                - token
+              properties:
+                public_key:
+                  type: string
+                  description: User Symbol Public key
+                token:
+                  type: string
+                  description: Issur from SSS
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"  
   /quest:
     get:
       tags:
