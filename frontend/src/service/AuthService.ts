@@ -8,8 +8,8 @@ export class AuthService extends SystemService {
   public static async login() {
     try {
       const token = await this.getActiveAccountToken();
-      const publicKey = this.getActivePublicKey();
-      return await ApiService.verifyUser(publicKey, token);
+      const { publicKey: public_key } = this.getActivePublicAccount();
+      return await ApiService.verifyUser({ public_key, token });
     } catch {
       throw new Error(
         '署名に失敗しました。やり直すか SSS の設定が正しいか確認下さい',
@@ -18,8 +18,7 @@ export class AuthService extends SystemService {
   }
 
   public static async getUser() {
-    const publicKey = this.getActivePublicKey();
-    const user = await ApiService.getUser(publicKey);
-    return user.data;
+    const account = this.getActivePublicAccount();
+    return await ApiService.getUser({ public_key: account.publicKey });
   }
 }
