@@ -1,32 +1,24 @@
-import { Network } from '../models/Network';
+import { ApiService } from './ApiService';
 import SystemService from './SystemService';
-import { apiClient } from './ApiService';
-
-export type VerifiedSss = {
-  signerAddress: string;
-  iat: number;
-  verifierAddress: string;
-  netWork: number;
-};
 
 /**
  * システムの認証サービス
  */
 export class AuthService extends SystemService {
-  public static async login(network: Network) {
+  public static async login() {
     try {
       const token = await this.getActiveAccountToken();
-      const publicKey = this.getActivePublicKey();
-
-      const verifiedSss: VerifiedSss = 
-        await (await apiClient.post('api/verify-token', {publicKey, token, network: network.type})).data;
-      // 署名は正しいです
-      console.log(verifiedSss);
-      // とりあえず画像の①だけですが、DB触ると時間かかりそうなので一旦ここまでｗ
-      // ②についてはRDBを確認するのか、ブロックチェーンを確認するのかが分からず
-    } catch (e) {
-      // 署名は正しくありませんでした
-      console.log(e);
+      const { publicKey: public_key } = this.getActivePublicAccount();
+      return await ApiService.verifyUser({ public_key, token });
+    } catch {
+      throw new Error(
+        '署名に失敗しました。やり直すか SSS の設定が正しいか確認下さい',
+      );
     }
+  }
+
+  public static async getUser() {
+    const account = this.getActivePublicAccount();
+    return await ApiService.getUser({ public_key: account.publicKey });
   }
 }

@@ -1,11 +1,18 @@
+import { Account, PublicAccount } from 'symbol-sdk/dist/src/model/account';
+import { TEST_DATA } from '../config';
+import { announceAggregateBonded } from '../contracts/announce';
+import { hashLockTransaction } from '../contracts/hashLockTransaction';
+import { Network, NodeInfo } from '../models/Network';
+import { SystemFee } from '../models/Tax';
 import {
   getActiveAccountToken,
   getActivePublicKey,
+  getActiveNetworkType,
+  getActiveName,
   requestSign,
   requestSignWithCosignatories,
   setTransaction,
 } from 'sss-module';
-import { Account } from 'symbol-sdk/dist/src/model/account';
 import {
   AggregateTransaction,
   AggregateTransactionCosignature,
@@ -14,12 +21,6 @@ import {
   Transaction,
   TransactionType,
 } from 'symbol-sdk/dist/src/model/transaction';
-import { TEST_DATA } from '../config';
-import { announceAggregateBonded } from '../contracts/announce';
-import { hashLockTransaction } from '../contracts/hashLockTransaction';
-import { Network, NodeInfo } from '../models/Network';
-import { SystemFee } from '../models/Tax';
-import { apiClient } from './ApiService';
 
 export default class SystemService {
   protected constructor() {}
@@ -27,9 +28,12 @@ export default class SystemService {
   /**
    * システムアカウントのパブリックキーを取得します。
    */
-  protected static getSystemPublicKey(): string {
+  protected static getSystemPublicAccount() {
     if (import.meta.env.VITE_SYSTEM_PUBLICKEY) {
-      return import.meta.env.VITE_SYSTEM_PUBLICKEY;
+      return PublicAccount.createFromPublicKey(
+        import.meta.env.VITE_SYSTEM_PUBLICKEY,
+        getActiveNetworkType(),
+      );
     }
     throw new Error('System Error: `VITE_SYSTEM_PUBLICKEY` is not defined.');
   }
@@ -78,10 +82,19 @@ export default class SystemService {
 
   /**
    * Get the public key of the account registered with the SSS.
-   * SSS に登録されているアカウントの公開鍵を取得します。
+   * SSS に登録されているアカウントを取得します
    */
-  protected static getActivePublicKey() {
-    return getActivePublicKey();
+  public static getActivePublicAccount() {
+    const publicKey = getActivePublicKey();
+    const networkType = getActiveNetworkType();
+    return PublicAccount.createFromPublicKey(publicKey, networkType);
+  }
+
+  /**
+   * 現在のアカウントの名前を取得する
+   */
+  public static getActiveAccountNameFromSSS() {
+    return getActiveName();
   }
 
   /**

@@ -1,0 +1,579 @@
+openapi: 3.0.3
+info:
+  title: Decentralized Guild
+  description: |-
+    About Decentralized Guild System APIs. Please use it when expanding the system.
+  contact:
+    email: ym.u.ichiro@gmail.com
+  license:
+    name: MIT
+    url: https://github.com/ymuichiro/decentralized-guild/blob/main/LICENSE
+  version: 0.0.1
+externalDocs:
+  description: Find out more about Decentralized Guild
+  url: https://github.com/ymuichiro/decentralized-guild
+servers:
+  - url: http://localhost:3001/api
+tags:
+  - name: user
+    description: add, info, isRegist
+  - name: quest
+    description: add, list, info, order, approval
+  - name: guild-quest
+    description: add, list, info
+  - name: guild
+    description: create, info, join
+  - name: notice
+    description: notice for a user
+paths:
+  /user:
+    get:
+      tags:
+        - user
+      summary: get user
+      operationId: getUser
+      parameters:
+        - in: query
+          name: public_key
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/UserTable"
+    post:
+      tags:
+        - user
+      summary: add user
+      operationId: addUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+  /users:
+    get:
+      tags:
+        - user
+      summary: get users list
+      operationId: getUsers
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserTable"
+  /user/verify:
+    post:
+      tags:
+        - user
+      summary: verify user
+      operationId: verifyUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - public_key
+                - token
+              properties:
+                public_key:
+                  type: string
+                  description: User Symbol Public key
+                token:
+                  type: string
+                  description: Issur from SSS
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"  
+  /quest:
+    get:
+      tags:
+        - quest
+      summary: get quest
+      operationId: getQuest
+      parameters:
+        - in: query
+          name: quest_id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/QuestTable"
+    post:
+      tags:
+        - quest
+      summary: add quest
+      operationId: addQuest
+      requestBody:
+        required: true
+        description: to blank transaction_hash, transaction_hash
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Quest"
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+    put:
+      tags:
+        - quest
+      summary: put quest
+      operationId: updateQuest
+      requestBody:
+        required: true
+        description: Register the contents of the updated quest（Cannot update transaction hash）
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quest_id
+              properties:
+                quest_id:
+                  type: number
+                nominate_guild_id:
+                  type: number
+                title:
+                  type: string
+                description:
+                  type: string
+                reward:
+                  type: number
+                worker_public_key:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+  /quest/set-hash:
+    post:
+      tags:
+        - quest
+      summary: set transaction hash
+      operationId: setQuestHash
+      requestBody:
+        required: true
+        description: set transaction hash & worker public key when quest recieved. can only be written once
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quest_id
+                - transaction_hash
+                - worker_public_key
+              properties:
+                quest_id:
+                  type: number
+                transaction_hash:
+                  type: string
+                worker_public_key:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+
+  /quests:
+    get:
+      tags:
+        - quest
+      summary: get quest list
+      operationId: getQuests
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/QuestTable"
+  /guild/quest:
+    get:
+      tags:
+        - guild-quest
+      summary: get guild quest
+      operationId: getGuildQuest
+      parameters:
+        - in: query
+          name: quest_id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/QuestTable"
+    post:
+      tags:
+        - guild-quest
+      summary: add guild quest
+      operationId: addGuildQuest
+      requestBody:
+        required: true
+        description: to blank transaction_hash, transaction_hash & required nominate_guild_id
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Quest"
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+  /guild/quests:
+    get:
+      tags:
+        - guild-quest
+      summary: get guild quest list
+      operationId: getGuildQuests
+      parameters:
+        - in: query
+          name: nominate_guild_id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/QuestTable"
+  /guild:
+    get:
+      tags:
+        - guild
+      summary: get guild
+      operationId: getGuild
+      parameters:
+        - in: query
+          name: guild_id
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - $ref: "#/components/schemas/GuildTable"
+    post:
+      tags:
+        - guild
+      summary: add guild
+      operationId: addGuild
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Guild"
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+  /guilds:
+    get:
+      tags:
+        - guild
+      summary: get guild list
+      operationId: getGuilds
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/GuildTable"
+  /notices:
+    get:
+      tags:
+        - notice
+      summary: get notice list for user
+      operationId: getNotices
+      parameters:
+        - in: query
+          name: public_key
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Notice"
+components:
+  schemas:
+    Sccessful:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+            - error
+        message:
+          type: string
+    User:
+      type: object
+      required:
+        - public_key
+        - name
+        - icon
+      properties:
+        public_key:
+          type: string
+        name:
+          type: string
+        icon:
+          type: string
+          description: base64 encoding
+    UserTable:
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          required:
+            - created
+          properties:
+            created:
+              type: number
+              description: new Date().getTime()
+    Quest:
+      type: object
+      required:
+        - quest_id
+        - title
+        - description
+        - reward
+        - requester_public_key
+        - status
+      properties:
+        quest_id:
+          type: number
+        nominate_guild_id:
+          type: number
+          nullable: true
+        transaction_hash:
+          type: string
+          nullable: true
+        title:
+          type: string
+        description:
+          type: string
+        reward:
+          type: number
+        requester_public_key:
+          type: string
+        worker_public_key:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - WANTED
+            - WORKING
+            - COMPLETED
+    QuestTable:
+      allOf:
+        - $ref: "#/components/schemas/Quest"
+        - type: object
+          required:
+            - quest_id
+            - created
+          properties:
+            quest_id:
+              type: number
+            created:
+              type: number
+              description: new Date().getTime()
+    Notice:
+      type: object
+      required:
+        - title
+        - body
+        - public_key
+        - created
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        public_key:
+          type: string
+        created:
+          type: number
+          description: new Date().getTime()
+    Guild:
+      type: object
+      required:
+        - owner_public_key
+        - name
+        - icon
+      properties:
+        owner_public_key:
+          type: string
+        name:
+          type: string
+        icon:
+          type: string
+          description: base64 encoding
+    GuildTable:
+      allOf:
+        - $ref: "#/components/schemas/Guild"
+        - type: object
+          required:
+            - guild_id
+            - created
+          properties:
+            guild_id:
+              type: number
+            created:
+              type: number
+              description: new Date().getTime()

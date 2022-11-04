@@ -11,6 +11,9 @@ export interface paths {
   '/users': {
     get: operations['getUsers'];
   };
+  '/user/verify': {
+    post: operations['verifyUser'];
+  };
   '/quest': {
     get: operations['getQuest'];
     put: operations['updateQuest'];
@@ -139,6 +142,28 @@ export interface operations {
           'application/json': {
             data: components['schemas']['UserTable'][];
           };
+        };
+      };
+    };
+  };
+  verifyUser: {
+    responses: {
+      /** Successful operation */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          /** @description User Symbol Public key */
+          public_key: string;
+          /** @description Issur from SSS */
+          token: string;
         };
       };
     };

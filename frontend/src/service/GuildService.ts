@@ -25,9 +25,9 @@ export default class GuildService extends SystemService {
     network: Network,
   ) {
     const systemFees = await this.getSystemFees();
-    const applicantPublicKey = this.getActivePublicKey();
+    const applicantAccount = this.getActivePublicAccount();
     const contract = await joinGuildAggregateTransaction(
-      applicantPublicKey,
+      applicantAccount.publicKey,
       guildOwnerPublicKey,
       guildMosaicId,
       systemFees,
@@ -46,8 +46,8 @@ export default class GuildService extends SystemService {
     mosaicSupplyAmount: number,
     network: Network,
   ) {
-    const applicantPublicKey = this.getActivePublicKey();
-    const systemPublicKey = this.getSystemPublicKey();
+    const applicantAccount = this.getActivePublicAccount();
+    const systemAccount = this.getSystemPublicAccount();
     // 一旦認識合わせ後
     // await establishGuildTransaction();
     // await this.sendToCosigTransaction();
