@@ -17,10 +17,9 @@ export class AuthService extends SystemService {
     }
   }
 
-  /** ユーザーの登録有無を確認する */
-  public static async userRegistrationConfirmation() {
+  public static async getUser() {
     const publicKey = this.getActivePublicKey();
     const user = await ApiService.getUser(publicKey);
-    return user.data ? true : false;
+    return user.data;
   }
 }

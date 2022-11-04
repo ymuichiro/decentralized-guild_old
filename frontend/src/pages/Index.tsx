@@ -27,10 +27,16 @@ const Index = (): JSX.Element => {
     if (!window.SSS) {
       return alert('Allow this page in SSS Extension and retry to connect wallet');
     }
+    setLoading(true);
     try {
       await AuthService.login();
-      const res = await AuthService.userRegistrationConfirmation();
-      navigate(res ? ROUTER_PATHS.join.path : ROUTER_PATHS.dashboard.path);
+      const res = await AuthService.getUser();
+      if (res) {
+        setUserInformation(res);
+        navigate(ROUTER_PATHS.dashboard.path);
+      } else {
+        navigate(ROUTER_PATHS.join.path);
+      }
     } catch (err) {
       if (err instanceof Error) alert(err.message);
     } finally {
