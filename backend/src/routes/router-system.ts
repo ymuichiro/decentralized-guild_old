@@ -1,7 +1,7 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 import { CosignatureSignedTransaction, SignedTransaction, PublicAccount, NetworkType } from 'symbol-sdk';
-import { System, VerifiedSss } from '../services/System';
+import { System } from '../services/System';
 import { operations } from '../@types/swagger';
 
 // Constants
@@ -20,7 +20,6 @@ type ResponseVerifyToken = operations['verifyUser']['responses']['200']['content
 
 type RequestAnnounceAggregateBonded = Request<never, never, operations['announceAggregateBonded']['requestBody']['content']['application/json']>;
 type ResponseAnnounceAggregateBonded = operations['announceAggregateBonded']['responses']['200']['content']['application/json'];
-
 
 /** Cosignate Transaction by System. */
 router.post(p.cosig_system, (req: Request<SignedTransaction>, res: Response<CosignatureSignedTransaction>) => {

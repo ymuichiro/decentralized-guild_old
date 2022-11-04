@@ -5,7 +5,6 @@ import Dashboard from '@pages/app/Dashboard';
 import './styles/main.css';
 
 import Test from '@pages/Test';
-
 export const ROUTER_PATHS = {
   _: {
     path: "/*",

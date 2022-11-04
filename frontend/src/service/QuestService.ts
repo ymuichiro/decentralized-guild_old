@@ -26,14 +26,14 @@ export default class QuestService extends SystemService {
     node: NodeInfo,
     network: Network,
   ) {
-    const workerPublicKey = this.getActivePublicKey();
-    const systemPublicKey = this.getSystemPublicKey();
-    
+
+    const workerAccount = this.getActivePublicAccount();
+    const systemAccount = this.getSystemPublicAccount();
     const aggregateTransaction = recievedQuestAggregateTransaction(
       contractId,
       requesterPublicKey,
-      workerPublicKey,
-      systemPublicKey,
+      workerAccount.publicKey,
+      systemAccount.publicKey,
       fee.deposit,
       network,
     );
@@ -54,7 +54,7 @@ export default class QuestService extends SystemService {
   /**
    * クエストを完了する
    */
-   public static async completeQuest(
+  public static async completeQuest(
     workerPublicKey: string,
     reward: number,
     requesterJudgement: Evaluation,
@@ -63,19 +63,18 @@ export default class QuestService extends SystemService {
     node: NodeInfo,
     network: Network,
   ) {
-
     const aggregateTransaction = completeOrderTransaction(
-      this.getActivePublicKey(),
+      this.getActivePublicAccount().publicKey,
       workerPublicKey,
       this.getGuildOwnerPublicKey(),
-      this.getSystemPublicKey(),
+      this.getSystemPublicAccount().publicKey,
       reward,
       this.getWrpMosaicId(),
       this.getGuildPointMosaicId(),
       requesterJudgement,
       workerJudgement,
       fee,
-      network
+      network,
     );
 
     // アグボンアナウンス --> ハッシュロック
