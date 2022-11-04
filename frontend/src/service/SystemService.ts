@@ -1,23 +1,24 @@
-import { 
-  getActivePublicKey,
+import {
   getActiveAccountToken,
+  getActivePublicKey,
   requestSign,
+  requestSignWithCosignatories,
   setTransaction,
-  requestSignWithCosignatories } from 'sss-module';
-import { Account, PublicAccount } from 'symbol-sdk/dist/src/model/account';
-import { TEST_DATA } from '../config';
-import { announceAggregateBonded, announceTransaction } from '../contracts/announce';
-import { hashLockTransaction } from '../contracts/hashLockTransaction'
-import { Network, NodeInfo } from '../models/Network';
-import { SystemFee } from '../models/Tax';
+} from 'sss-module';
+import { Account } from 'symbol-sdk/dist/src/model/account';
 import {
   AggregateTransaction,
+  AggregateTransactionCosignature,
+  CosignatureSignedTransaction,
   SignedTransaction,
   Transaction,
-  CosignatureSignedTransaction,
-  AggregateTransactionCosignature,
   TransactionType,
 } from 'symbol-sdk/dist/src/model/transaction';
+import { TEST_DATA } from '../config';
+import { announceAggregateBonded } from '../contracts/announce';
+import { hashLockTransaction } from '../contracts/hashLockTransaction';
+import { Network, NodeInfo } from '../models/Network';
+import { SystemFee } from '../models/Tax';
 import { apiClient } from './ApiService';
 
 export default class SystemService {
@@ -27,18 +28,16 @@ export default class SystemService {
    * システムアカウントのパブリックキーを取得します。
    */
   protected static getSystemPublicKey(): string {
-    if (process.env.SYSTEM_PUBLIC_KEY) {
-      return process.env.SYSTEM_PUBLIC_KEY;
+    if (import.meta.env.VITE_SYSTEM_PUBLICKEY) {
+      return import.meta.env.VITE_SYSTEM_PUBLICKEY;
     }
-    throw new Error(
-      'System Error: `process.env.SYSTEM_PUBLIC_KEY` is not defined.',
-    );
+    throw new Error('System Error: `VITE_SYSTEM_PUBLICKEY` is not defined.');
   }
 
   /**
    * ギルドオーナーアカウントのパブリックキーを取得します。
    */
-   protected static getGuildOwnerPublicKey(): string {
+  protected static getGuildOwnerPublicKey(): string {
     return TEST_DATA.GUILD_OWNER.KEY.PUBLIC;
   }
 
@@ -56,14 +55,14 @@ export default class SystemService {
   /**
    * WRPモザイクIDを取得する。
    */
-   protected static getWrpMosaicId(): string {
+  protected static getWrpMosaicId(): string {
     return TEST_DATA.SYSTEM.WRP_MOSAIC_ID;
   }
 
   /**
    * ギルドポイントモザイクIDを取得する。
    */
-   protected static getGuildPointMosaicId(): string {
+  protected static getGuildPointMosaicId(): string {
     return TEST_DATA.SYSTEM.GUILD_POINT_MOSAIC_ID;
   }
 
@@ -71,12 +70,10 @@ export default class SystemService {
    * SSS よりトークンを取得する
    */
   protected static async getActiveAccountToken(): Promise<string> {
-    if (process.env.SYSTEM_PUBLIC_KEY) {
-      return await getActiveAccountToken(process.env.SYSTEM_PUBLIC_KEY);
+    if (import.meta.env.VITE_SYSTEM_PUBLICKEY) {
+      return await getActiveAccountToken(import.meta.env.VITE_SYSTEM_PUBLICKEY);
     }
-    throw new Error(
-      'System Error: `process.env.SYSTEM_PUBLIC_KEY` is not defined.',
-    );
+    throw new Error('System Error: `VITE_SYSTEM_PUBLICKEY` is not defined.');
   }
 
   /**
@@ -134,7 +131,9 @@ export default class SystemService {
     network: Network,
   ) {
     setTransaction(transaction);
-    const signedAggTransaction = await requestSignWithCosignatories([cosignature]);
+    const signedAggTransaction = await requestSignWithCosignatories([
+      cosignature,
+    ]);
 
     // アグボンはハッシュロックも署名が必要なため二度SSSで署名が必要。少しラグを設けないとバグるためのsetTimeout
     return await new Promise<SignedTransaction>((resolve) => {
@@ -190,7 +189,7 @@ export default class SystemService {
    * トランザクションにSSSで署名し、SignedTransactionを返す
    */
   protected static async sign(
-    transaction: Transaction
+    transaction: Transaction,
   ): Promise<SignedTransaction> {
     setTransaction(transaction);
     return await requestSign();

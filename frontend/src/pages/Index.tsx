@@ -8,6 +8,7 @@ import Container from '@components/atom/Container';
 import Typography from '@components/atom/Typography';
 import Button from '@components/moleculs/Button';
 import LoadingWrap from '@components/moleculs/LoadingWrap';
+import { AuthService } from '@service/AuthService';
 
 interface SSSWindow extends Window {
   SSS: any;
@@ -26,7 +27,8 @@ const Index = (): JSX.Element => {
     if (!window.SSS) {
       alert('Allow this page in SSS Extension and retry to connect wallet');
     } else {
-      navigate('/join');
+      AuthService.login(import.meta.env.VITE_NETWORK_TYPE);
+      // navigate('/join');
       // try {
       //   // call user information
       //   setUserInformation({

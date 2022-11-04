@@ -24,8 +24,9 @@ export class AuthService extends SystemService {
       console.log(verifiedSss);
       // とりあえず画像の①だけですが、DB触ると時間かかりそうなので一旦ここまでｗ
       // ②についてはRDBを確認するのか、ブロックチェーンを確認するのかが分からず
-    } catch {
+    } catch (e) {
       // 署名は正しくありませんでした
+      console.log(e);
     }
   }
 }

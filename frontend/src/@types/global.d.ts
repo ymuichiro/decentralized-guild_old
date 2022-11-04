@@ -5,8 +5,9 @@ declare module 'process' {
     namespace NodeJS {
       interface ProcessEnv {
         NODE_ENV?: 'development' | 'production';
-        API_BASE_URL?: string;
-        NETWORK_TYPE?: NetworkType;
+        VITE_API_BASE_URL?: string;
+        VITE_NETWORK_TYPE?: NetworkType;
+        VITE_SYSTEM_PUBLICKEY?: string;
       }
     }
   }
