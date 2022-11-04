@@ -28,10 +28,7 @@ export default class QuestService extends SystemService {
   ) {
     const workerPublicKey = this.getActivePublicKey();
     const systemPublicKey = this.getSystemPublicKey();
-    console.log(systemPublicKey)
-    //const systemPublicKey = 'F5F70B12E4DF75AAA1131D3F16671F3043CF8ECA98AB30758F5124A7FD545D86';
-
-    /*
+    
     const aggregateTransaction = recievedQuestAggregateTransaction(
       contractId,
       requesterPublicKey,
@@ -47,7 +44,6 @@ export default class QuestService extends SystemService {
       node,
       network,
     );
-    */
 
     // ここでDBのQuestを編集する --> API を用意しておくのでAPIを叩く想定で
     // ハッシュを登録しておくと後ほど検索に便利

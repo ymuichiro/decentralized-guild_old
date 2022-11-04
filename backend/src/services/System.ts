@@ -76,6 +76,7 @@ export class System {
     node: string,
     network: NetworkType
   ) {
+    console.log(node)
     const repositoryFactory = new RepositoryFactoryHttp(node);
     const listener = repositoryFactory.createListener();
     const transactionHttp = repositoryFactory.createTransactionRepository();

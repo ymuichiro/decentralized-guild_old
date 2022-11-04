@@ -43,11 +43,9 @@ export interface paths {
   '/notices': {
     get: operations['getNotices'];
   };
-  /*
   '/announce-aggregate-bonded': {
     post: operations['announceAggregateBonded'];
   };
-  */
 }
 
 export interface components {
@@ -383,7 +381,6 @@ export interface operations {
       };
     };
   };
-  /*
   announceAggregateBonded: {
     responses: {
       200: {
@@ -405,7 +402,6 @@ export interface operations {
       };
     };
   };
-  */
 }
 
 export interface external {}

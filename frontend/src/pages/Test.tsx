@@ -4,7 +4,7 @@ import { TEST_DATA } from '../config';
 
 const Test = (): JSX.Element => {
     const handleLogin = async () => {
-        await QuestService.receivedQuest('contract_id', '4C4BD7F8E1E1AC61DB817089F9416A7EDC18339F06CDC851495B271533FAD13B', TEST_DATA.FEE, TEST_DATA.NODE, TEST_DATA.NETWORK);
+        await QuestService.receivedQuest('contract_id', '20131B4B0BC5239B7D2EF65B1D31630E7347A90CD65DE347168208B815F3EE77', TEST_DATA.FEE, TEST_DATA.NODE, TEST_DATA.NETWORK);
         //await AuthService.login();
     }
     return(

@@ -42,22 +42,4 @@ export class ApiService {
     operations['announceAggregateBonded']['requestBody']['content']['application/json']
   >('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType})
   }
-/*
-  public static announceAggregateBonded(
-    signedAggTransaction: SignedTransaction,
-    signedHashLockTransaction: SignedTransaction,
-    node: string,
-    networkType: NetworkType
-  ) {
-    console.log(signedAggTransaction);
-    return this.apiClient.post('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, nodeInfo: node, networkType})
-  }
-
-  public static test() {
-    this.apiClient.post('/test', {test: 'test'})
-    .then((r)=>{
-        console.log(r);
-    })
-  }
-  */
 }
