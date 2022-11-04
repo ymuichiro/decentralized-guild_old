@@ -1,24 +1,24 @@
 import {
-  getActivePublicKey,
   getActiveAccountToken,
+  getActivePublicKey,
   requestSign,
-  setTransaction,
   requestSignWithCosignatories,
+  setTransaction,
 } from 'sss-module';
 import { Account } from 'symbol-sdk/dist/src/model/account';
+import {
+  AggregateTransaction,
+  AggregateTransactionCosignature,
+  CosignatureSignedTransaction,
+  SignedTransaction,
+  Transaction,
+  TransactionType,
+} from 'symbol-sdk/dist/src/model/transaction';
 import { TEST_DATA } from '../config';
 import { announceAggregateBonded } from '../contracts/announce';
 import { hashLockTransaction } from '../contracts/hashLockTransaction';
 import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
-import {
-  AggregateTransaction,
-  SignedTransaction,
-  Transaction,
-  CosignatureSignedTransaction,
-  AggregateTransactionCosignature,
-  TransactionType,
-} from 'symbol-sdk/dist/src/model/transaction';
 import { apiClient } from './ApiService';
 
 export default class SystemService {
