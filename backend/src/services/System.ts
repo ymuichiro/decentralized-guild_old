@@ -8,7 +8,9 @@ import {
   NetworkType,
   PublicAccount,
   EncryptedMessage,
+  RepositoryFactoryHttp,
 } from 'symbol-sdk';
+import { filter, delay, mergeMap } from "rxjs";
 
 export type VerifiedSss = {
   signerAddress: string;
@@ -63,5 +65,58 @@ export class System {
       console.error(e);
       throw new Error('署名検証に失敗しました');
     }
+  }
+
+  /**
+   * アグリゲートボンデッドトランザクションのアナウンス
+   */
+  static announceAggregateBonded(
+    signedAggTransaction: SignedTransaction,
+    signedHashLockTransaction: SignedTransaction,
+    node: string,
+    network: NetworkType
+  ) {
+    const repositoryFactory = new RepositoryFactoryHttp(node);
+    const listener = repositoryFactory.createListener();
+    const transactionHttp = repositoryFactory.createTransactionRepository();
+    const signer = PublicAccount.createFromPublicKey(
+      signedHashLockTransaction.signerPublicKey,
+      network
+    );
+
+    transactionHttp.announce(signedHashLockTransaction).subscribe({
+      next: (x) => console.log(x),
+      error: (err) => console.error(err),
+    });
+
+    listener.open().then(() => {
+      console.log("listener open");
+      listener.newBlock();
+      listener
+        .confirmed(signer.address)
+        .pipe(
+          filter((tx) => {
+            console.log(tx);
+            return (
+              tx.transactionInfo !== undefined &&
+              tx.transactionInfo.hash === signedHashLockTransaction.hash
+            );
+          }),
+          delay(5000),
+          mergeMap((_) => {
+            return transactionHttp.announceAggregateBonded(signedAggTransaction);
+          })
+        )
+        .subscribe({
+          next: (x) => {
+            console.log("tx Ok!!!", x);
+            listener.close();
+          },
+          error: (err) => {
+            console.error(err);
+            listener.close();
+          },
+        });
+    });
   }
 }

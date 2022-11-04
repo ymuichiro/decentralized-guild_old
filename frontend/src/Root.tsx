@@ -4,6 +4,8 @@ import Join from '@pages/login/Join';
 import Dashboard from '@pages/app/Dashboard';
 import './styles/main.css';
 
+import Test from '@pages/Test';
+
 export const ROUTER_PATHS = {
   _: {
     path: "/*",
@@ -24,6 +26,11 @@ export const ROUTER_PATHS = {
     path: "/dashboard",
     name: "DashBoard",
     element: <div />,
+  },
+  test: {
+    path: "/test",
+    name: "Test",
+    element: <Test />,
   },
 }
 

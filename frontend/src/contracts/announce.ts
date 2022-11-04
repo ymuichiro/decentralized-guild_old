@@ -1,8 +1,7 @@
 import { RepositoryFactoryHttp } from "symbol-sdk/dist/src/infrastructure/RepositoryFactoryHttp";
-import { PublicAccount } from "symbol-sdk/dist/src/model/account";
 import { SignedTransaction } from "symbol-sdk/dist/src/model/transaction";
 import { Network, NodeInfo } from "../models/Network";
-import { filter, delay, mergeMap } from "rxjs";
+import { ApiService } from '../service/ApiService';
 
 /**
  * トランザクションをアナウンスする
@@ -28,6 +27,18 @@ export const announceAggregateBonded = async function (
   nodeInfo: NodeInfo,
   network: Network
 ) {
+  try {
+    const result = await ApiService.announceAggregateBonded(
+      signedAggTransaction,
+      signedHashLockTransaction,
+      nodeInfo.url,
+      network.type,
+    )
+    console.log(result);
+  } catch {
+    throw new Error('アナウンスに失敗しました');
+  }
+  /*
   const repositoryFactory = new RepositoryFactoryHttp(nodeInfo.url);
   const listener = repositoryFactory.createListener();
   const transactionHttp = repositoryFactory.createTransactionRepository();
@@ -70,4 +81,5 @@ export const announceAggregateBonded = async function (
         },
       });
   });
+  */
 };
