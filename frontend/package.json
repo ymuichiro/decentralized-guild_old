@@ -6,28 +6,31 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.10",
+    "patch-package": "6.4.7",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2",
     "recoil": "^0.7.6",
     "sss-module": "^1.0.4",
-    "symbol-sdk": "2.0.2"
+    "symbol-sdk": "2.0.2",
+    "symbol-sdk-3": "npm:symbol-sdk@^3.0.0"
   },
   "devDependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@rollup/plugin-inject": "^5.0.2",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.1.0",
     "buffer": "^6.0.3",
+    "node-stdlib-browser": "^1.2.0",
     "typescript": "^4.6.4",
     "vite": "^3.1.0"
   }
