@@ -97,12 +97,13 @@ export default class SystemService {
   ) {
     // アグリゲートトランザクションのSSSへのセット、署名
     setTransaction(transaction);
-    const singedTransaction = await requestSign();
+    console.log(transaction)
+    const signedAggTransaction = await requestSign();
 
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
         const hashlockTransaction = await hashLockTransaction(
-          singedTransaction,
+          signedAggTransaction,
           network,
         );
 
@@ -110,13 +111,11 @@ export default class SystemService {
         setTransaction(hashlockTransaction);
         const signedHashLockTransaction = await requestSign();
 
-        await announceAggregateBonded(
-          singedTransaction,
-          signedHashLockTransaction,
-          node,
-          network,
-        );
-        resolve(signedHashLockTransaction);
+        // ハッシュロックとアグリゲートボンデッドのアナウンス
+        const result: SignedTransaction = 
+          await (await apiClient.post('api/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node: node.url, network: network.type})).data;
+
+        resolve(result);
       }, 1000);
     });
   }

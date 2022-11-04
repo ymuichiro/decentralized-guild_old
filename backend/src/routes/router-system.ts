@@ -16,6 +16,7 @@ const { OK } = StatusCodes;
 export const p = {
   cosig_system: '/cosig',
   verify_token: '/verify-token',
+  announce_aggregate_bonded: '/announce-aggregate-bonded',
 } as const;
 
 /** Cosignate Transaction by System. */
@@ -31,7 +32,15 @@ router.post(p.verify_token, (req: Request<string>, res: Response<VerifiedSss>) =
   res.status(OK);
   res.send(System.verifyToken(userPublicKey, token, network));
 });
-//
+
+/** Announce AggregateBonded Transaction */
+router.post(p.announce_aggregate_bonded, (req: Request, res: Response) => {
+  console.log(req.body);
+  const { signedAggTransaction, signedHashLockTransaction, node, network } = req.body;
+  res.status(OK);
+  res.send(System.announceAggregateBonded(signedAggTransaction, signedHashLockTransaction, node, network));
+});
+
 router.post('/test', (req: Request<string>, res: Response<PublicAccount>) => {
   const { publicKey } = req.body;
   res.status(OK);
