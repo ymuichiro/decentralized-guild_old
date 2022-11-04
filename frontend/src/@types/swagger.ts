@@ -43,9 +43,11 @@ export interface paths {
   '/notices': {
     get: operations['getNotices'];
   };
+  /*
   '/announce-aggregate-bonded': {
     post: operations['announceAggregateBonded'];
   };
+  */
 }
 
 export interface components {
@@ -381,9 +383,9 @@ export interface operations {
       };
     };
   };
+  /*
   announceAggregateBonded: {
     responses: {
-      /** Successful operation */
       200: {
         content: {
           'application/json': {
@@ -395,18 +397,15 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': {
-          /** @description Signed Aggregate Transaction */
           signedAggTransaction: SignedTransaction;
-          /** @description Signed HashLock Transaction */
           signedHashLockTransaction: SignedTransaction;
-          /** @description Node Info */
           node: string;
-          /** @description Network Info */
           networkType: NetworkType;
         };
       };
     };
   };
+  */
 }
 
 export interface external {}

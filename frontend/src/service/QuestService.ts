@@ -4,7 +4,6 @@ import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
 import { Evaluation } from '../models/Quest';
 import SystemService from './SystemService';
-
 export default class QuestService extends SystemService {
   constructor() {
     super();
@@ -29,7 +28,10 @@ export default class QuestService extends SystemService {
   ) {
     const workerPublicKey = this.getActivePublicKey();
     const systemPublicKey = this.getSystemPublicKey();
+    console.log(systemPublicKey)
+    //const systemPublicKey = 'F5F70B12E4DF75AAA1131D3F16671F3043CF8ECA98AB30758F5124A7FD545D86';
 
+    /*
     const aggregateTransaction = recievedQuestAggregateTransaction(
       contractId,
       requesterPublicKey,
@@ -45,6 +47,7 @@ export default class QuestService extends SystemService {
       node,
       network,
     );
+    */
 
     // ここでDBのQuestを編集する --> API を用意しておくのでAPIを叩く想定で
     // ハッシュを登録しておくと後ほど検索に便利

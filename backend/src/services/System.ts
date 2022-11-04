@@ -96,7 +96,6 @@ export class System {
         .confirmed(signer.address)
         .pipe(
           filter((tx) => {
-            console.log(tx);
             return (
               tx.transactionInfo !== undefined &&
               tx.transactionInfo.hash === signedHashLockTransaction.hash
@@ -104,6 +103,7 @@ export class System {
           }),
           delay(5000),
           mergeMap((_) => {
+            console.log(AggregateTransaction.createFromPayload(signedAggTransaction.payload));
             return transactionHttp.announceAggregateBonded(signedAggTransaction);
           })
         )

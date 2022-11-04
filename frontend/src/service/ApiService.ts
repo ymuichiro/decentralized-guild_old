@@ -30,6 +30,18 @@ export class ApiService {
     >('/user', { params });
   }
 
+  public static announceAggregateBonded(
+    signedAggTransaction: SignedTransaction,
+    signedHashLockTransaction: SignedTransaction,
+    node: string,
+    networkType: NetworkType
+  ) {
+    return this.apiClient.post<
+    never,
+    operations['announceAggregateBonded']['responses']['200']['content']['application/json'],
+    operations['announceAggregateBonded']['requestBody']['content']['application/json']
+  >('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType})
+  }
 /*
   public static announceAggregateBonded(
     signedAggTransaction: SignedTransaction,
@@ -38,20 +50,14 @@ export class ApiService {
     networkType: NetworkType
   ) {
     console.log(signedAggTransaction);
-    return this.apiClient.post<
-    never,
-    operations['announceAggregateBonded']['responses']['200']['content']['application/json'],
-    operations['announceAggregateBonded']['requestBody']['content']['application/json']
-  >('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType})
+    return this.apiClient.post('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, nodeInfo: node, networkType})
   }
-*/
-  public static announceAggregateBonded(
-    signedAggTransaction: SignedTransaction,
-    signedHashLockTransaction: SignedTransaction,
-    node: string,
-    networkType: NetworkType
-  ) {
-    console.log(signedAggTransaction);
-    return this.apiClient.post('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType})
+
+  public static test() {
+    this.apiClient.post('/test', {test: 'test'})
+    .then((r)=>{
+        console.log(r);
+    })
   }
+  */
 }

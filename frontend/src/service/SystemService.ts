@@ -8,14 +8,11 @@ import {
 import { Account } from 'symbol-sdk/dist/src/model/account';
 import {
   AggregateTransaction,
-  AggregateTransactionCosignature,
-  CosignatureSignedTransaction,
   SignedTransaction,
   Transaction,
-  TransactionType,
 } from 'symbol-sdk/dist/src/model/transaction';
 import { TEST_DATA } from '../config';
-import { announceAggregateBonded } from '../contracts/announce';
+import { announceAggregateBonded, announceTransaction } from '../contracts/announce';
 import { hashLockTransaction } from '../contracts/hashLockTransaction';
 import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
@@ -91,7 +88,7 @@ export default class SystemService {
    * Sign with the specified account.
    */
   protected static async sendAggregateTransaction(
-    transaction: Transaction,
+    transaction: AggregateTransaction,
     node: NodeInfo,
     network: Network,
   ) {
@@ -101,7 +98,7 @@ export default class SystemService {
 
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
-        const hashlockTransaction = await hashLockTransaction(
+        const hashlockTransaction = hashLockTransaction(
           singedTransaction,
           network,
         );
