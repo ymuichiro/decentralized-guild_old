@@ -9,6 +9,7 @@ import Typography from '@components/atom/Typography';
 import Button from '@components/moleculs/Button';
 import LoadingWrap from '@components/moleculs/LoadingWrap';
 import { AuthService } from '@service/AuthService';
+import { ROUTER_PATHS } from '../Root';
 
 interface SSSWindow extends Window {
   SSS: any;
@@ -18,35 +19,34 @@ declare const window: SSSWindow;
 const Index = (): JSX.Element => {
   const [userInformation, setUserInformation] =
     useRecoilState(userInformationState);
-
   const [loading, setLoading] = useState<boolean>(false);
-
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    // SSS による署名検証の後、未登録ユーザの場合は新規登録、それ以外はダッシュボードへ飛ぶ
     if (!window.SSS) {
-      alert('Allow this page in SSS Extension and retry to connect wallet');
-    } else {
-      AuthService.login(import.meta.env.VITE_NETWORK_TYPE);
-      // navigate('/join');
-      // try {
-      //   // call user information
-      //   setUserInformation({
-      //     publicKey: window.SSS?.activePublicKey,
-      //     name: window.SSS?.activeName,
-      //     icon: 'https://avatars.githubusercontent.com/u/10491607?v=4',
-      //   });
-      //   navigate('/dashboard');
-      // } catch {
-      //   navigate('/join');
-      // }
+      return alert('Allow this page in SSS Extension and retry to connect wallet');
     }
-    setLoading(false);
+    setLoading(true);
+    try {
+      await AuthService.login();
+      const res = await AuthService.getUser();
+      if (res) {
+        setUserInformation(res);
+        navigate(ROUTER_PATHS.dashboard.path);
+      } else {
+        navigate(ROUTER_PATHS.join.path);
+      }
+    } catch (err) {
+      if (err instanceof Error) alert(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     if (userInformation) {
-      navigate('/dashboard');
+      navigate(ROUTER_PATHS.dashboard.path);
     }
   }, []);
 

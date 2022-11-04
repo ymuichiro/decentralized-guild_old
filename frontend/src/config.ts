@@ -57,7 +57,7 @@ export const TEST_DATA = {
     networkCurrencyDivisibility: 6,
   } as Network,
   NODE: {
-    url: 'https://mikun-testnet2.tk:3001',
+    url: 'https://mikun-testnet.tk:3001',
   } as NodeInfo,
   FEE: {
     createAccount: 0,

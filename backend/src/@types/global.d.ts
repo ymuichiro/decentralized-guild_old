@@ -8,8 +8,8 @@ declare module 'process' {
         MYSQL_PASSWORD?: string;
         DATABASE_HOST?: string;
         TZ?: string;
-        PORT?: number;
-        NETWORK_TYPE?: number;
+        PORT?: string;
+        NETWORK_TYPE?: string;
         SYSTEM_PUBLICKEY?: string;
       }
     }
