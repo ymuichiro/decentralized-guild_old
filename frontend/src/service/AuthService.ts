@@ -1,6 +1,6 @@
-import { EncryptedMessage, PublicAccount, Account } from 'symbol-sdk';
 import { Network } from '../models/Network';
 import SystemService from './SystemService';
+import { apiClient } from './ApiService';
 
 export type VerifiedSss = {
   signerAddress: string;
@@ -15,48 +15,18 @@ export type VerifiedSss = {
 export class AuthService extends SystemService {
   public static async login(network: Network) {
     try {
-      // 本番フロント用
       const token = await this.getActiveAccountToken();
       const publicKey = this.getActivePublicKey();
 
-      const verified = await AuthService.auth(publicKey, token, network);
-
+      const verifiedSss: VerifiedSss = 
+        await (await apiClient.post('api/verify-token', {publicKey, token, network: network.type})).data;
       // 署名は正しいです
-      console.log(verified);
+      console.log(verifiedSss);
       // とりあえず画像の①だけですが、DB触ると時間かかりそうなので一旦ここまでｗ
       // ②についてはRDBを確認するのか、ブロックチェーンを確認するのかが分からず
     } catch (e) {
       // 署名は正しくありませんでした
       console.log(e);
-    }
-  }
-
-  /**
-   * 渡されたTokenをSSSExtentionにより復号し、署名が行えるか確認する
-   */
-  private static async auth(
-    userPublicKey: string,
-    token: string,
-    network: Network,
-  ): Promise<VerifiedSss> {
-    try {
-      const userPublic = PublicAccount.createFromPublicKey(
-        userPublicKey,
-        network.type,
-      );
-      const msg = new EncryptedMessage(token, userPublic);
-      const verifier = Account.createFromPrivateKey(
-        process.env.VERIFIER_PRIVATE_KEY!,
-        network.type,
-      );
-      return JSON.parse(
-        verifier.decryptMessage(
-          msg,
-          PublicAccount.createFromPublicKey(userPublicKey, network.type),
-        ).payload,
-      ) as VerifiedSss;
-    } catch {
-      throw new Error('署名検証に失敗しました');
     }
   }
 }
