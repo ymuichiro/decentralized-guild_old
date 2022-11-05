@@ -13,6 +13,8 @@ import {
   SignedTransaction,
   Transaction,
   CosignatureSignedTransaction,
+  TransactionType,
+  AggregateTransactionCosignature,
 } from 'symbol-sdk/dist/src/model/transaction';
 import { ApiService } from './ApiService'
 import { TEST_DATA } from '../config';
@@ -167,20 +169,17 @@ export default class SystemService {
   /**
    * システムの連署を自動的に取得し、アナウンスまで行う
    */
-
-  /*
    protected static async sendWithCosigBySystemTransaction(
     signedTransaction: SignedTransaction,
     node: NodeInfo,
     network: Network,
   ) {
-    const cosignatureSignedTransaction: CosignatureSignedTransaction = 
-      await ApiService. post('api/cosig', {signedTransaction: signedTransaction})).data;
+    const signature = await ApiService.cosigBySystem(signedTransaction);
     const signedAggregateTransactionNotComplete = AggregateTransaction.createFromPayload(signedTransaction.payload);
     const aggregateTransactionCosignature = 
       new AggregateTransactionCosignature(
-        cosignatureSignedTransaction.signature,
-        PublicAccount.createFromPublicKey(cosignatureSignedTransaction.signerPublicKey, signedAggregateTransactionNotComplete.networkType)
+        signature.data,
+        SystemService.getSystemPublicAccount()
       );
     const completeAggregate = signedAggregateTransactionNotComplete.addCosignatures([aggregateTransactionCosignature]);
     const hash = 
@@ -191,7 +190,6 @@ export default class SystemService {
     const signedCompleteTransaction = new SignedTransaction(completeAggregate.serialize(), hash, signedTransaction.signerPublicKey, TransactionType.AGGREGATE_COMPLETE, network.type);
     announceTransaction(signedCompleteTransaction, node);
   }
-  */
 
   /**
    * トランザクションにSSSで署名し、SignedTransactionを返す

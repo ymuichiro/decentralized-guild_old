@@ -175,4 +175,14 @@ export class ApiService {
     operations['announceAggregateBonded']['requestBody']['content']['application/json']
   >('/announce-aggregate-bonded', {signedAggTransactionPayload: signedAggTransaction.payload, signedHashLockTransactionPayload: signedHashLockTransaction.payload})
   }
+
+  public static cosigBySystem(
+    signedAggTransaction: SignedTransaction,
+  ) {
+    return this.apiClient.post<
+    never,
+    operations['cosigBySystem']['responses']['200']['content']['application/json'],
+    operations['cosigBySystem']['requestBody']['content']['application/json']
+  >('/cosig-system', {signedAggTransactionPayload: signedAggTransaction.payload})
+  }
 }

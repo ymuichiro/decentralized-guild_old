@@ -10,7 +10,7 @@ const { OK } = StatusCodes;
 
 // Paths
 export const p = {
-  cosig_system: '/cosig',
+  cosig_system: '/cosig-system',
   verify_token: '/verify-token',
   announce_aggregate_bonded: '/announce-aggregate-bonded',
 } as const;
@@ -21,11 +21,26 @@ type ResponseVerifyToken = operations['verifyUser']['responses']['200']['content
 type RequestAnnounceAggregateBonded = Request<never, never, operations['announceAggregateBonded']['requestBody']['content']['application/json']>;
 type ResponseAnnounceAggregateBonded = operations['announceAggregateBonded']['responses']['200']['content']['application/json'];
 
+type RequestCosigBySystem = Request<never, never, operations['cosigBySystem']['requestBody']['content']['application/json']>;
+type ResponseCosigBySystem = operations['cosigBySystem']['responses']['200']['content']['application/json'];
+
 /** Cosignate Transaction by System. */
-router.post(p.cosig_system, (req: Request<SignedTransaction>, res: Response<CosignatureSignedTransaction>) => {
-  const { signedTransaction } = req.body;
-  res.status(OK);
-  res.send(System.cosignateBySystem(signedTransaction));
+router.post(p.cosig_system, (req: RequestCosigBySystem, res: Response<ResponseCosigBySystem>, next) => {
+  const { signedAggTransactionPayload } = req.body;
+  if (!process.env.NETWORK_TYPE || Number(process.env.NETWORK_TYPE).toString() === 'NaN') {
+    throw new Error('System Error: is not degined server side network_type');
+  }
+  if (!process.env.GENERATION_HASH) {
+    throw new Error('System Error: is not degined server side generation_hash');
+  }
+  try {
+    const signature = System.cosignateBySystem(signedAggTransactionPayload, Number(process.env.NETWORK_TYPE),process.env.GENERATION_HASH);
+    res.status(OK)
+    .json({ data: signature });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
 });
 
 /** Verify ActiveAccountToken from SSS. */

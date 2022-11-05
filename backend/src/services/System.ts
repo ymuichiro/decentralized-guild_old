@@ -1,6 +1,5 @@
 import {
   CosignatureTransaction,
-  CosignatureSignedTransaction,
   SignedTransaction,
   AggregateTransaction,
   TransferTransaction,
@@ -21,8 +20,14 @@ export type VerifiedSss = {
 };
 
 export class System {
-  static cosignateBySystem(signedTransaction: SignedTransaction): CosignatureSignedTransaction {
+  static cosignateBySystem(signedAggTransactionPayload: string, networkType: NetworkType, generationHash: string): string {
     try {
+      const generationHashArray = Array.prototype.slice.call(Buffer.from(generationHash, 'hex'), 0);
+      const agg = AggregateTransaction.createFromPayload(signedAggTransactionPayload);
+      const aggHash = AggregateTransaction.createTransactionHash(signedAggTransactionPayload, generationHashArray);
+      if(!agg.signer) throw new Error('signer of aggregate transaction is undefined');
+      const signedTransaction = new SignedTransaction(signedAggTransactionPayload, aggHash, agg.signer?.publicKey, agg.type, networkType);
+
       const verify = this.verifyTransaction(signedTransaction);
       if (!verify) throw new Error('不正なトランザクションの可能性があります');
       const systemAccount = Account.createFromPrivateKey(process.env.SYSTEM_PRIVATEKEY!, signedTransaction.networkType);
@@ -31,7 +36,7 @@ export class System {
         signedTransaction.payload,
         process.env.GENERATION_HASH!,
       );
-      return cosignedSignedTransaction;
+      return cosignedSignedTransaction.signature;
     } catch (e) {
       throw new Error((e as Error).stack);
     }

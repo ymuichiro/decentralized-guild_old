@@ -451,7 +451,7 @@ paths:
     post:
       tags:
         - transaction
-      summary: get notice list for user
+      summary: announce aggregate bonded
       operationId: announceAggregateBonded
       requestBody:
         required: true
@@ -481,6 +481,38 @@ paths:
                 properties:
                   data:
                     $ref: "#/components/schemas/Sccessful"
+  /transaction/cosig-by-system:
+    post:
+      tags:
+        - transaction
+      summary: cosignate aggregate transaction by system
+      operationId: cosigBySystem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - signedAggTransactionPayload
+              properties:
+                signedAggTransactionPayload:
+                  type: string
+                  description: payload
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: string
+                    items:
+                      $ref: "#/components/schemas/Signature"
 components:
   schemas:
     Sccessful:
@@ -612,3 +644,10 @@ components:
             created:
               type: number
               description: new Date().getTime()
+    Signature:
+      type: object
+      required:
+        - signature
+      properties:
+        signature:
+          type: string
