@@ -256,7 +256,7 @@ export interface operations {
       content: {
         'application/json': {
           worker_public_key: string;
-          quest_id: string;
+          quest_id: number;
           message: string;
         };
       };

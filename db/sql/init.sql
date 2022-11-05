@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS notice (
   `public_key`            CHAR(64) NOT NULL,
   `title`                 TEXT,
   `body`                  TEXT,
-  `created`               DATETIME
+  `created`               DATETIME,
 );
 
 -- ******************************************

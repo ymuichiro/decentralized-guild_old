@@ -241,7 +241,7 @@ paths:
                 worker_public_key:
                   type: string
                 quest_id:
-                  type: string
+                  type: number
                 message:
                   type: string
       responses:
