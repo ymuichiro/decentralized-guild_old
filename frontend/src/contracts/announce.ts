@@ -24,15 +24,11 @@ export const announceTransaction = async function (
 export const announceAggregateBonded = async function (
   signedAggTransaction: SignedTransaction,
   signedHashLockTransaction: SignedTransaction,
-  nodeInfo: NodeInfo,
-  network: Network
 ) {
   try {
     const result = await ApiService.announceAggregateBonded(
       signedAggTransaction,
       signedHashLockTransaction,
-      nodeInfo.url,
-      network.type,
     )
     console.log(result);
   } catch {

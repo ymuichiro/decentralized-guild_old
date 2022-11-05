@@ -43,10 +43,30 @@ router.post(p.verify_token, (req: RequestVerifyToken, res: Response<ResponseVeri
   }
 });
 
-router.post(p.announce_aggregate_bonded, (req: RequestAnnounceAggregateBonded, res: Response<ResponseAnnounceAggregateBonded>) => {
-  const { signedAggTransaction, signedHashLockTransaction, node, networkType} = req.body;
-  System.announceAggregateBonded(signedAggTransaction, signedHashLockTransaction, node, networkType)
-  res.status(OK).send({ data: { status: 'ok', message: 'ok' } });
-})
+router.post(p.announce_aggregate_bonded, (req: RequestAnnounceAggregateBonded, res: Response<ResponseAnnounceAggregateBonded>, next) => {
+  const { signedAggTransactionPayload, signedHashLockTransactionPayload} = req.body;
+  if (!process.env.NETWORK_TYPE || Number(process.env.NETWORK_TYPE).toString() === 'NaN') {
+    throw new Error('System Error: is not degined server side network_type');
+  }
+  if (!process.env.GENERATION_HASH) {
+    throw new Error('System Error: is not degined server side generation_hash');
+  }
+  if (!process.env.NODE) {
+    throw new Error('System Error: is not degined server side node');
+  }
+  try {
+    System.announceAggregateBonded(
+      signedAggTransactionPayload,
+      signedHashLockTransactionPayload,
+      process.env.NODE,
+      Number(process.env.NETWORK_TYPE),
+      process.env.GENERATION_HASH
+    )
+    res.status(OK).send({ data: { status: 'ok', message: 'ok' } });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
 
 export default router;

@@ -168,13 +168,11 @@ export class ApiService {
   public static announceAggregateBonded(
     signedAggTransaction: SignedTransaction,
     signedHashLockTransaction: SignedTransaction,
-    node: string,
-    networkType: NetworkType
   ) {
     return this.apiClient.post<
     never,
     operations['announceAggregateBonded']['responses']['200']['content']['application/json'],
     operations['announceAggregateBonded']['requestBody']['content']['application/json']
-  >('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType})
+  >('/announce-aggregate-bonded', {signedAggTransactionPayload: signedAggTransaction.payload, signedHashLockTransactionPayload: signedHashLockTransaction.payload})
   }
 }

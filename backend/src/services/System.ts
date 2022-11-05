@@ -9,6 +9,7 @@ import {
   PublicAccount,
   EncryptedMessage,
   RepositoryFactoryHttp,
+  HashLockTransaction,
 } from 'symbol-sdk';
 import { filter, delay, mergeMap } from "rxjs";
 
@@ -70,19 +71,30 @@ export class System {
   /**
    * アグリゲートボンデッドトランザクションのアナウンス
    */
-  static announceAggregateBonded(
-    signedAggTransaction: SignedTransaction,
-    signedHashLockTransaction: SignedTransaction,
+   static announceAggregateBonded(
+    signedAggTransactionPayload: string,
+    signedHashLockTransactionPayload: string,
     node: string,
-    network: NetworkType
+    networkType: NetworkType,
+    generationHash: string
   ) {
-    console.log(node)
+    const generationHashArray = Array.prototype.slice.call(Buffer.from(generationHash, 'hex'), 0);
+    const agg = AggregateTransaction.createFromPayload(signedAggTransactionPayload);
+    const aggHash = AggregateTransaction.createTransactionHash(signedAggTransactionPayload, generationHashArray);
+    if(!agg.signer) throw new Error('signer of aggregate transaction is undefined');
+    const signedAggTransaction = new SignedTransaction(signedAggTransactionPayload, aggHash, agg.signer?.publicKey, agg.type, networkType);
+
+    const hashlock = HashLockTransaction.createFromPayload(signedHashLockTransactionPayload);
+    const hashlockHash = AggregateTransaction.createTransactionHash(signedHashLockTransactionPayload, generationHashArray);
+    if(!hashlock.signer) throw new Error('signer of hashlock transaction is undefined');
+    const signedHashLockTransaction = new SignedTransaction(signedHashLockTransactionPayload, hashlockHash, hashlock.signer?.publicKey, hashlock.type, networkType);
+
     const repositoryFactory = new RepositoryFactoryHttp(node);
     const listener = repositoryFactory.createListener();
     const transactionHttp = repositoryFactory.createTransactionRepository();
     const signer = PublicAccount.createFromPublicKey(
       signedHashLockTransaction.signerPublicKey,
-      network
+      networkType
     );
 
     transactionHttp.announce(signedHashLockTransaction).subscribe({
@@ -104,7 +116,6 @@ export class System {
           }),
           delay(5000),
           mergeMap((_) => {
-            console.log(AggregateTransaction.createFromPayload(signedAggTransaction.payload));
             return transactionHttp.announceAggregateBonded(signedAggTransaction);
           })
         )

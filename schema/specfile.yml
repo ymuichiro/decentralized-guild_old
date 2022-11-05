@@ -459,11 +459,14 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - signedAggTransactionPayload
+                - signedHashLockTransactionPayload
               properties:
-                signedAggTransaction:
+                signedAggTransactionPayload:
                   type: string
                   description: payload
-                signedHashLockTransaction:
+                signedHashLockTransactionPayload:
                   type: string
                   description: payload
       responses:

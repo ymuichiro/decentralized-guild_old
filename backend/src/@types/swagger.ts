@@ -395,9 +395,9 @@ export interface operations {
       content: {
         'application/json': {
           /** @description payload */
-          signedAggTransaction?: string;
+          signedAggTransactionPayload: string;
           /** @description payload */
-          signedHashLockTransaction?: string;
+          signedHashLockTransactionPayload: string;
         };
       };
     };

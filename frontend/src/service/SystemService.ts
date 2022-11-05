@@ -12,7 +12,9 @@ import {
   AggregateTransaction,
   SignedTransaction,
   Transaction,
+  CosignatureSignedTransaction,
 } from 'symbol-sdk/dist/src/model/transaction';
+import { ApiService } from './ApiService'
 import { TEST_DATA } from '../config';
 import { announceAggregateBonded, announceTransaction } from '../contracts/announce';
 import { hashLockTransaction } from '../contracts/hashLockTransaction';
@@ -123,8 +125,6 @@ export default class SystemService {
         await announceAggregateBonded(
           singedTransaction,
           signedHashLockTransaction,
-          node,
-          network,
         );
         resolve(signedHashLockTransaction);
       }, 1000);
@@ -148,7 +148,7 @@ export default class SystemService {
     // アグボンはハッシュロックも署名が必要なため二度SSSで署名が必要。少しラグを設けないとバグるためのsetTimeout
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
-        const hashlockTransaction = await hashLockTransaction(
+        const hashlockTransaction = hashLockTransaction(
           signedAggTransaction,
           network,
         );
@@ -158,8 +158,6 @@ export default class SystemService {
         await announceAggregateBonded(
           signedAggTransaction,
           signedHashLockTransaction,
-          node,
-          network,
         );
         resolve(signedHashLockTransaction);
       }, 1000);
@@ -177,7 +175,7 @@ export default class SystemService {
     network: Network,
   ) {
     const cosignatureSignedTransaction: CosignatureSignedTransaction = 
-      await (await apiClient.post('api/cosig', {signedTransaction: signedTransaction})).data;
+      await ApiService. post('api/cosig', {signedTransaction: signedTransaction})).data;
     const signedAggregateTransactionNotComplete = AggregateTransaction.createFromPayload(signedTransaction.payload);
     const aggregateTransactionCosignature = 
       new AggregateTransactionCosignature(
@@ -193,7 +191,7 @@ export default class SystemService {
     const signedCompleteTransaction = new SignedTransaction(completeAggregate.serialize(), hash, signedTransaction.signerPublicKey, TransactionType.AGGREGATE_COMPLETE, network.type);
     announceTransaction(signedCompleteTransaction, node);
   }
-*/
+  */
 
   /**
    * トランザクションにSSSで署名し、SignedTransactionを返す
