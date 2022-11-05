@@ -2,14 +2,14 @@ import Modal from "@mui/material/Modal";
 import Typography from "../atom/Typography";
 import Box from "../atom/Box";
 import Slide from "../atom/Slide";
-import { QuestModel } from "../../models/Quest";
 import Button from "../moleculs/Button";
+import { components } from "../../@types/swagger";
 
 type Props = {
   /** true = open */
   isOpen: boolean;
   onClose?: () => void;
-  quest?: QuestModel;
+  quest?: components["schemas"]["Quest"];
 }
 
 /**

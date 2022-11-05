@@ -42,6 +42,9 @@ export interface paths {
   '/notices': {
     get: operations['getNotices'];
   };
+  '/transaction/announce-aggregate-bonded': {
+    post: operations['announceAggregateBonded'];
+  };
 }
 
 export interface components {
@@ -373,6 +376,28 @@ export interface operations {
           'application/json': {
             data: components['schemas']['Notice'][];
           };
+        };
+      };
+    };
+  };
+  announceAggregateBonded: {
+    responses: {
+      /** Successful operation */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          /** @description payload */
+          signedAggTransaction?: string;
+          /** @description payload */
+          signedHashLockTransaction?: string;
         };
       };
     };

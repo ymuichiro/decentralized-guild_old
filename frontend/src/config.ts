@@ -42,28 +42,28 @@ export const TEST_DATA = {
   SYSTEM: {
     KEY: {
       PUBLIC:
-        '6F50170029B2647B883EB43A7451104EC4086373814DC7A4D115825B3B705126',
-      PRIVATE: '29E658CB66CCD912205F3B21E632B1AB2B58FC12FAADA54A7B51682D0FEB7A6D',
+        'A1610EC762116771BD215797875E3B87C8635724A88AEC62CA68272A27A90FD6',
+      PRIVATE: '799B836734640FD21A31EE237EB8CC5232B50ACBC5A657989C7166031B0BDD3B',
     },
     WRP_MOSAIC_ID: '15C6DE40D310C2DA',
     GUILD_POINT_MOSAIC_ID: '5723ADD9F8610384',
   },
   NETWORK: {
     generationHash:
-      'CD5BBD868762461096AAEFF3ECC4254099F9B60F538CF3EB47359F27A9185060',
-    type: 152,
-    epochAdjustment: 1637848847,
-    currencyMosaicId: '3A8416DB2D53B6C8',
+      '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
+    type: 104,
+    epochAdjustment: 1615853185,
+    currencyMosaicId: '6BED913FA20223F8',
     networkCurrencyDivisibility: 6,
   } as Network,
   NODE: {
-    url: 'https://mikun-testnet.tk:3001',
+    url: 'https://hideyoshi.mydns.jp:3001',
   } as NodeInfo,
   FEE: {
-    createAccount: 0,
-    createQuest: 0,
-    acceptQuest: 0,
-    deposit: 0,
+    createAccount: 1,
+    createQuest: 1,
+    acceptQuest: 1,
+    deposit: 1,
   } as SystemFee,
   AUTH: {
     TOKEN:

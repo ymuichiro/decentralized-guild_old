@@ -4,11 +4,14 @@ import path from 'path';
 import { createRequire } from 'module';
 import inject from '@rollup/plugin-inject';
 import stdLibBrowser from 'node-stdlib-browser';
+import checker from 'vite-plugin-checker';
+
 const require = createRequire(import.meta.url);
 
 export default defineConfig({
   plugins: [
     react(),
+    checker({ typescript: true }),
     {
       ...inject({
         global: [
@@ -47,7 +50,6 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['buffer', 'process'],
-
     esbuildOptions: {
       target: 'esnext',
       define: {

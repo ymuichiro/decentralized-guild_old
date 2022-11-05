@@ -3,27 +3,44 @@ import Index from '@pages/Index';
 import Join from '@pages/login/Join';
 import Dashboard from '@pages/app/Dashboard';
 import './styles/main.css';
+import Quests from '@pages/app/Quests';
+import QuestRequest from '@pages/app/QuestRequest';
+import QuestOrderAccept from '@pages/app/QuestOrderAccept';
 
+import Test from '@pages/Test';
 export const ROUTER_PATHS = {
   _: {
     path: "/*",
-    name: "_",
     element: <Index />,
   },
   top: {
     path: "/",
-    name: "Top",
     element: <Index />,
   },
   join: {
     path: "/join",
-    name: "Join",
     element: <Join />,
   },
   dashboard: {
     path: "/dashboard",
-    name: "DashBoard",
-    element: <div />,
+    element: <Dashboard />,
+  },
+  quests: {
+    path: "/quests",
+    element: <Quests />,
+  },
+  questRequest: {
+    path: "/quest-request",
+    element: <QuestRequest />,
+  },
+  questOrderAccept: {
+    path: "/quest-order-accept",
+    element: <QuestOrderAccept />,
+  },
+  test: {
+    path: "/test",
+    name: "Test",
+    element: <Test />,
   },
 }
 

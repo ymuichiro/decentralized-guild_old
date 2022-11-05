@@ -25,6 +25,8 @@ tags:
     description: create, info, join
   - name: notice
     description: notice for a user
+  - name: transaction
+    description: contract API
 paths:
   /user:
     get:
@@ -254,7 +256,6 @@ paths:
                 properties:
                   data:
                     $ref: "#/components/schemas/Sccessful"
-
   /quests:
     get:
       tags:
@@ -446,6 +447,37 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Notice"
+  /transaction/announce-aggregate-bonded:
+    post:
+      tags:
+        - transaction
+      summary: get notice list for user
+      operationId: announceAggregateBonded
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signedAggTransaction:
+                  type: string
+                  description: payload
+                signedHashLockTransaction:
+                  type: string
+                  description: payload
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
 components:
   schemas:
     Sccessful:
