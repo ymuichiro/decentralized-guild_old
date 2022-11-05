@@ -18,8 +18,13 @@ export const p = {
 type RequestVerifyToken = Request<never, never, operations['verifyUser']['requestBody']['content']['application/json']>;
 type ResponseVerifyToken = operations['verifyUser']['responses']['200']['content']['application/json'];
 
-type RequestAnnounceAggregateBonded = Request<never, never, operations['announceAggregateBonded']['requestBody']['content']['application/json']>;
-type ResponseAnnounceAggregateBonded = operations['announceAggregateBonded']['responses']['200']['content']['application/json'];
+type RequestAnnounceAggregateBonded = Request<
+  never,
+  never,
+  operations['announceAggregateBonded']['requestBody']['content']['application/json']
+>;
+type ResponseAnnounceAggregateBonded =
+  operations['announceAggregateBonded']['responses']['200']['content']['application/json'];
 
 /** Cosignate Transaction by System. */
 router.post(p.cosig_system, (req: Request<SignedTransaction>, res: Response<CosignatureSignedTransaction>) => {
@@ -43,10 +48,13 @@ router.post(p.verify_token, (req: RequestVerifyToken, res: Response<ResponseVeri
   }
 });
 
-router.post(p.announce_aggregate_bonded, (req: RequestAnnounceAggregateBonded, res: Response<ResponseAnnounceAggregateBonded>) => {
-  const { signedAggTransaction, signedHashLockTransaction, node, networkType} = req.body;
-  System.announceAggregateBonded(signedAggTransaction, signedHashLockTransaction, node, networkType)
-  res.status(OK).send({ data: { status: 'ok', message: 'ok' } });
-})
+router.post(
+  p.announce_aggregate_bonded,
+  (req: RequestAnnounceAggregateBonded, res: Response<ResponseAnnounceAggregateBonded>) => {
+    const { signedAggTransaction, signedHashLockTransaction, node, networkType } = req.body as any;
+    System.announceAggregateBonded(signedAggTransaction, signedHashLockTransaction, node, networkType);
+    res.status(OK).send({ data: { status: 'ok', message: 'ok' } });
+  },
+);
 
 export default router;

@@ -175,6 +175,6 @@ export class ApiService {
     never,
     operations['announceAggregateBonded']['responses']['200']['content']['application/json'],
     operations['announceAggregateBonded']['requestBody']['content']['application/json']
-  >('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType})
+  >('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType} as any)
   }
 }

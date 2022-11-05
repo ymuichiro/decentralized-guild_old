@@ -19,6 +19,9 @@ export interface paths {
     put: operations['updateQuest'];
     post: operations['addQuest'];
   };
+  '/quest/order-request': {
+    post: operations['orderRequestQuest'];
+  };
   '/quest/set-hash': {
     post: operations['setQuestHash'];
   };
@@ -228,6 +231,28 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['Quest'];
+      };
+    };
+  };
+  orderRequestQuest: {
+    responses: {
+      /** Successful */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    /** to blank transaction_hash, transaction_hash */
+    requestBody: {
+      content: {
+        'application/json': {
+          worker_public_key: string;
+          quest_id: string;
+          message: string;
+        };
       };
     };
   };
