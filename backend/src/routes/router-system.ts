@@ -1,7 +1,7 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 import { CosignatureSignedTransaction, SignedTransaction, PublicAccount, NetworkType } from 'symbol-sdk';
-import { System, VerifiedSss } from '../services/System';
+import { System } from '../services/System';
 import { operations } from '../@types/swagger';
 
 // Constants
@@ -12,10 +12,14 @@ const { OK } = StatusCodes;
 export const p = {
   cosig_system: '/cosig',
   verify_token: '/verify-token',
+  announce_aggregate_bonded: '/announce-aggregate-bonded',
 } as const;
 
 type RequestVerifyToken = Request<never, never, operations['verifyUser']['requestBody']['content']['application/json']>;
 type ResponseVerifyToken = operations['verifyUser']['responses']['200']['content']['application/json'];
+
+type RequestAnnounceAggregateBonded = Request<never, never, operations['announceAggregateBonded']['requestBody']['content']['application/json']>;
+type ResponseAnnounceAggregateBonded = operations['announceAggregateBonded']['responses']['200']['content']['application/json'];
 
 /** Cosignate Transaction by System. */
 router.post(p.cosig_system, (req: Request<SignedTransaction>, res: Response<CosignatureSignedTransaction>) => {
@@ -38,5 +42,11 @@ router.post(p.verify_token, (req: RequestVerifyToken, res: Response<ResponseVeri
     next(e);
   }
 });
+
+router.post(p.announce_aggregate_bonded, (req: RequestAnnounceAggregateBonded, res: Response<ResponseAnnounceAggregateBonded>) => {
+  const { signedAggTransaction, signedHashLockTransaction, node, networkType} = req.body;
+  System.announceAggregateBonded(signedAggTransaction, signedHashLockTransaction, node, networkType)
+  res.status(OK).send({ data: { status: 'ok', message: 'ok' } });
+})
 
 export default router;

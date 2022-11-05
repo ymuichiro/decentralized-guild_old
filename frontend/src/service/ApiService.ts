@@ -1,5 +1,6 @@
 import { operations } from '../@types/swagger';
 import axios, { AxiosInstance } from 'axios';
+import { SignedTransaction, NetworkType } from 'symbol-sdk';
 
 export class ApiService {
   private static apiClient: AxiosInstance = axios.create({
@@ -162,5 +163,18 @@ export class ApiService {
     } catch {
       throw new Error("サーバーへのクエスト登録に失敗しました。再度お試し下さい");
     }
+  }
+
+  public static announceAggregateBonded(
+    signedAggTransaction: SignedTransaction,
+    signedHashLockTransaction: SignedTransaction,
+    node: string,
+    networkType: NetworkType
+  ) {
+    return this.apiClient.post<
+    never,
+    operations['announceAggregateBonded']['responses']['200']['content']['application/json'],
+    operations['announceAggregateBonded']['requestBody']['content']['application/json']
+  >('/announce-aggregate-bonded', {signedAggTransaction, signedHashLockTransaction, node, networkType})
   }
 }

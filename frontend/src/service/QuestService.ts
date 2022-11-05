@@ -4,7 +4,6 @@ import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
 import { Evaluation } from '../models/Quest';
 import SystemService from './SystemService';
-
 export default class QuestService extends SystemService {
   constructor() {
     super();
@@ -27,6 +26,7 @@ export default class QuestService extends SystemService {
     node: NodeInfo,
     network: Network,
   ) {
+
     const workerAccount = this.getActivePublicAccount();
     const systemAccount = this.getSystemPublicAccount();
     const aggregateTransaction = recievedQuestAggregateTransaction(
