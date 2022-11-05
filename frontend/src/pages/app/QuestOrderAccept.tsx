@@ -56,8 +56,9 @@ const QuestOrderAccept = (): JSX.Element => {
   const onSubmitHandle = async () => {
     // TODO: サーバー側にトランザクション発行依頼を行い、契約内容をブロックチェーンに刻む
     if(!questInfo) throw new Error('quest info is undefind');
+    if(!questInfo.worker_public_key) throw new Error('worker_public_key is undefind');
     // contract_idはquest_idで良いのかな
-    const hash = await QuestService.receivedQuest(questInfo.quest_id.toString(), questInfo.requester_public_key, TEST_DATA.FEE, TEST_DATA.NODE, TEST_DATA.NETWORK);
+    const hash = await QuestService.receivedQuest(questInfo.quest_id.toString(), questInfo.worker_public_key, TEST_DATA.FEE, TEST_DATA.NODE, TEST_DATA.NETWORK);
     // ハッカソンでの対応としてはここまでで一旦終わりとする。最後にアラートか何かでブロックチェーンエクスプローラーの該当のトランザクション情報を表示し、「書き込めましたね？」と示ればOk
     console.log("このデータを使ってトランザクションを発行する", questInfo, notification)
     window.open(

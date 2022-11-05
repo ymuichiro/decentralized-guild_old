@@ -23,18 +23,18 @@ export default class QuestService extends SystemService {
    */
   public static async receivedQuest(
     contractId: string,
-    requesterPublicKey: string,
+    workerPublicKey: string,
     fee: SystemFee,
     node: NodeInfo,
     network: Network,
   ): Promise<string> {
 
-    const workerAccount = this.getActivePublicAccount();
+    const requesterAccount = this.getActivePublicAccount();
     const systemAccount = this.getSystemPublicAccount();
     const aggregateTransaction = recievedQuestAggregateTransaction(
       contractId,
-      requesterPublicKey,
-      workerAccount.publicKey,
+      requesterAccount.publicKey,
+      workerPublicKey,
       systemAccount.publicKey,
       fee.deposit,
       network,
