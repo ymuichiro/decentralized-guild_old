@@ -19,6 +19,9 @@ export interface paths {
     put: operations['updateQuest'];
     post: operations['addQuest'];
   };
+  '/quest/order-request': {
+    post: operations['orderRequestQuest'];
+  };
   '/quest/set-hash': {
     post: operations['setQuestHash'];
   };
@@ -237,6 +240,28 @@ export interface operations {
       };
     };
   };
+  orderRequestQuest: {
+    responses: {
+      /** Successful */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    /** to blank transaction_hash, transaction_hash */
+    requestBody: {
+      content: {
+        'application/json': {
+          worker_public_key: string;
+          quest_id: string;
+          message: string;
+        };
+      };
+    };
+  };
   setQuestHash: {
     responses: {
       /** Successful */
@@ -440,6 +465,7 @@ export enum ApiPaths {
   getQuest = '/quest',
   addQuest = '/quest',
   updateQuest = '/quest',
+  orderRequestQuest = '/quest/order-request',
   setQuestHash = '/quest/set-hash',
   getQuests = '/quests',
   getGuildQuest = '/guild/quest',

@@ -220,6 +220,42 @@ paths:
                 properties:
                   data:
                     $ref: "#/components/schemas/Sccessful"
+  /quest/order-request:
+    post:
+      tags:
+        - quest
+      summary: make an order request to the quest's "Requester"
+      operationId: orderRequestQuest
+      requestBody:
+        required: true
+        description: to blank transaction_hash, transaction_hash
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - worker_public_key
+                - quest_id
+                - message
+              properties:
+                worker_public_key:
+                  type: string
+                quest_id:
+                  type: string
+                message:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
   /quest/set-hash:
     post:
       tags:
