@@ -42,7 +42,7 @@ export default function QuestDetails(props: Props): JSX.Element {
   };
 
   const onClickReceiveRequest = () => {
-
+    // TODO: orderRequestQuest API を読んで、Requester への受注依頼の通知をサーバー側で登録する（この関数ではここまで）。（以降別ページの話）Requesterは次回ログイン時にサーバー側へ読み出しを行い、通知があれば開く --> 承諾を押すと API questSetHash を呼び出して受注Transactionを交付する。
     if (props.onClose) props.onClose();
   }
 
