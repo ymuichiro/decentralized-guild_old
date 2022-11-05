@@ -17,28 +17,13 @@ export const p = {
 
 type RequestVerifyToken = Request<never, never, operations['verifyUser']['requestBody']['content']['application/json']>;
 type ResponseVerifyToken = operations['verifyUser']['responses']['200']['content']['application/json'];
-
-type RequestAnnounceAggregateBonded = Request<
-  never,
-  never,
-  operations['announceAggregateBonded']['requestBody']['content']['application/json']
->;
-type ResponseAnnounceAggregateBonded =
-  operations['announceAggregateBonded']['responses']['200']['content']['application/json'];
-
-type RequestCosigBySystem = Request<
-  never,
-  never,
-  operations['cosigBySystem']['requestBody']['content']['application/json']
->;
-type ResponseCosigBySystem = operations['cosigBySystem']['responses']['200']['content']['application/json'];
-
-type RequestCosigBySystem = Request<
-  never,
-  never,
-  operations['cosigBySystem']['requestBody']['content']['application/json']
->;
-type ResponseCosigBySystem = operations['cosigBySystem']['responses']['200']['content']['application/json'];
+// prettier-ignore
+type RequestAnnounceAggregateBonded = Request<never, never, operations['announceAggregateBonded']['requestBody']['content']['application/json']>;
+// prettier-ignore
+type ResponseAnnounceAggregateBonded = operations['announceAggregateBonded']['responses']['200']['content']['application/json'];
+// prettier-ignore
+type RequestCosigBySystem = Request<never, never, operations['cosigBySystem']['requestBody']['content']['application/json']>;
+// type ResponseCosigBySystem = operations['cosigBySystem']['responses']['200']['content']['application/json'];
 
 /** Cosignate Transaction by System. */
 router.post(p.cosig_system, (req: RequestCosigBySystem, res: Response, next) => {
