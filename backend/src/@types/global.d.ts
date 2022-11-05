@@ -11,6 +11,8 @@ declare module 'process' {
         PORT?: string;
         NETWORK_TYPE?: string;
         SYSTEM_PUBLICKEY?: string;
+        GENERATION_HASH?: string;
+        NODE?: string;
       }
     }
   }

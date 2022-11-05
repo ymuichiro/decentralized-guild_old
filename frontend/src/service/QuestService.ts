@@ -1,9 +1,10 @@
 import { recievedQuestAggregateTransaction } from '../contracts/recievedQuestAggregateTransaction';
-import { completeOrderTransaction } from '../contracts/completeOrderTransaction';
+import { completeQuestTransaction } from '../contracts/completeQuestTransaction';
 import { Network, NodeInfo } from '../models/Network';
 import { SystemFee } from '../models/Tax';
 import { Evaluation } from '../models/Quest';
 import SystemService from './SystemService';
+import { ApiService } from './ApiService';
 export default class QuestService extends SystemService {
   constructor() {
     super();
@@ -63,7 +64,7 @@ export default class QuestService extends SystemService {
     node: NodeInfo,
     network: Network,
   ) {
-    const aggregateTransaction = completeOrderTransaction(
+    const aggregateTransaction = completeQuestTransaction(
       this.getActivePublicAccount().publicKey,
       workerPublicKey,
       this.getGuildOwnerPublicKey(),
@@ -77,9 +78,11 @@ export default class QuestService extends SystemService {
       network,
     );
 
-    // アグボンアナウンス --> ハッシュロック
+    // 起案者の署名をSSSで求る
     const signedTransaction = await this.sign(aggregateTransaction);
-
+    // APIでSystemの自動署名を得て、アグリゲートコンプリートでアナウンス
+    await this.sendWithCosigBySystemTransaction(signedTransaction, node, network)
+    
     // ここでDBのQuestを編集する --> API を用意しておくのでAPIを叩く想定で
     // Questステータスを完了とする
   }

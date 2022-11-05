@@ -15,7 +15,7 @@ import { Evaluation } from '../models/Quest'
  * Quest完了時のコントラクト
  * Requester,Workerの評価に合わせてトランザクションが変化する
  */
-export const completeOrderTransaction = function (
+export const completeQuestTransaction = function (
   requesterPublicKey: string,
   workerPublicKey: string,
   guildOwnerPublicKey: string,
@@ -52,7 +52,7 @@ export const completeOrderTransaction = function (
   const payRewardTransaction = TransferTransaction.create(
     Deadline.createEmtpy(),
     workerPublicAccount.address,
-    [new Mosaic(new MosaicId(network.currencyMosaicId), UInt64.fromUint(reward * network.networkCurrencyDivisibility))],
+    [new Mosaic(new MosaicId(network.currencyMosaicId), UInt64.fromUint(reward * Math.pow(10, network.networkCurrencyDivisibility)))],
     PlainMessage.create("pay reward"),
     network.type
   );
@@ -61,7 +61,7 @@ export const completeOrderTransaction = function (
   const returnDepositToRequesterTransaction = TransferTransaction.create(
     Deadline.createEmtpy(),
     requesterPublicAccount.address,
-    [new Mosaic(new MosaicId(network.currencyMosaicId), UInt64.fromUint(systemFee.deposit * network.networkCurrencyDivisibility))],
+    [new Mosaic(new MosaicId(network.currencyMosaicId), UInt64.fromUint(systemFee.deposit * Math.pow(10, network.networkCurrencyDivisibility)))],
     PlainMessage.create("return deposit"),
     network.type
   );
@@ -70,12 +70,12 @@ export const completeOrderTransaction = function (
   const returnDepositToWorkerTransaction = TransferTransaction.create(
     Deadline.createEmtpy(),
     workerPublicAccount.address,
-    [new Mosaic(new MosaicId(network.currencyMosaicId), UInt64.fromUint(systemFee.deposit * network.networkCurrencyDivisibility))],
+    [new Mosaic(new MosaicId(network.currencyMosaicId), UInt64.fromUint(systemFee.deposit * Math.pow(10, network.networkCurrencyDivisibility)))],
     PlainMessage.create("return deposit"),
     network.type
   );
 
-  // アグリゲートボンデッドトランザクションを作成する
+  // アグリゲートコンプリートトランザクションを作成する
   let aggTx = AggregateTransaction.createComplete(
     Deadline.create(network.epochAdjustment),
     [
@@ -147,7 +147,7 @@ export const completeOrderTransaction = function (
     )
     aggTx.innerTransactions.push(RevokeGuildPointTransaction.toAggregate(systemPublicAccount))
   }
-  aggTx.setMaxFeeForAggregate(100, 1);
+  aggTx = aggTx.setMaxFeeForAggregate(100, 1);
   // 作成完了したコントラクトを返却
   return aggTx;
 };

@@ -30,11 +30,11 @@ import { Network } from "../models/Network";
  * @param network
  * @returns
  */
-export const establishGuildTransaction = async function (
+export const establishGuildTransaction = function (
   guildOwnerPublicKey: string,
-  systemPublicKey: string,
-  guildMosaicId: string,
-  guildOwnerMosaicIdsMetadataKey: string,
+  //systemPublicKey: string,
+  //guildMosaicId: string,
+  //guildOwnerMosaicIdsMetadataKey: string,
   mosaicSupplyAmount: number,
   network: Network
 ) {
@@ -43,10 +43,14 @@ export const establishGuildTransaction = async function (
     network.type
   );
   const guildOwnerAcc = Account.generateNewAccount(network.type);
+
+  /*
+  ハッカソンでは不要
   const systemPubAcc = PublicAccount.createFromPublicKey(
     systemPublicKey,
     network.type
   );
+  */
 
   const multisigTransaction = MultisigAccountModificationTransaction.create(
     Deadline.createEmtpy(),
@@ -65,7 +69,7 @@ export const establishGuildTransaction = async function (
         UInt64.fromUint(100000000)
       ),
     ],
-    PlainMessage.create("transger fee"),
+    PlainMessage.create("transfer create mosaic fee"),
     network.type
   );
 
@@ -87,12 +91,15 @@ export const establishGuildTransaction = async function (
     UInt64.fromUint(mosaicSupplyAmount * Math.pow(10, 0)),
     network.type
   );
+
+  /*
+  上位モザイクはハッカソンでは不要
   const nonce2 = MosaicNonce.createRandom();
   const mosaicId2 = MosaicId.createFromNonce(nonce2, guildOwnerAcc.address);
   const mosaicDefinitionTransaction2 = MosaicDefinitionTransaction.create(
     Deadline.createEmtpy(),
     nonce2,
-    MosaicId.createFromNonce(nonce2, guildOwnerAcc.address),
+    mosaicId2,
     MosaicFlags.create(false, true, true, false),
     0,
     UInt64.fromUint(0),
@@ -105,6 +112,8 @@ export const establishGuildTransaction = async function (
     UInt64.fromUint(mosaicSupplyAmount * Math.pow(10, 0)),
     network.type
   );
+  
+  ひとまずギルドオーナー判別用モザイクは無し
   const guildMosaicTransaction = TransferTransaction.create(
     Deadline.createEmtpy(),
     guildOwnerAcc.address,
@@ -112,6 +121,8 @@ export const establishGuildTransaction = async function (
     PlainMessage.create("transfer guild mosaic"),
     network.type
   );
+  
+  同じくメタデータも不要、今後要検討。
   const value = mosaicId1.toHex() + "," + mosaicId2.toHex();
   const metadataTransaction = AccountMetadataTransaction.create(
     Deadline.createEmtpy(),
@@ -121,21 +132,23 @@ export const establishGuildTransaction = async function (
     Convert.utf8ToUint8(value),
     network.type
   );
+  */
 
+  /*
+  今はコンプリートだけどハッカソンが終わればボンデッド
   const aggregateTransaction = AggregateTransaction.createBonded(
+  */
+  const aggregateTransaction = AggregateTransaction.createComplete(
     Deadline.create(network.epochAdjustment),
     [
       multisigTransaction.toAggregate(guildOwnerAcc.publicAccount),
       mosaicFeeTransaction.toAggregate(guildMasterPubAcc),
       mosaicDefinitionTransaction1.toAggregate(guildOwnerAcc.publicAccount),
       mosaicSupplyChangeTransaction1.toAggregate(guildOwnerAcc.publicAccount),
-      mosaicDefinitionTransaction2.toAggregate(guildOwnerAcc.publicAccount),
-      mosaicSupplyChangeTransaction2.toAggregate(guildOwnerAcc.publicAccount),
-      guildMosaicTransaction.toAggregate(systemPubAcc),
-      metadataTransaction.toAggregate(systemPubAcc),
     ],
-    network.type
-  ).setMaxFeeForAggregate(100, 2);
+    network.type,
+    []
+  ).setMaxFeeForAggregate(100, 1);
 
   const result = {
     aggregateTransaction,
