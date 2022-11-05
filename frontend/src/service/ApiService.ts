@@ -179,10 +179,13 @@ export class ApiService {
   public static cosigBySystem(
     signedAggTransaction: SignedTransaction,
   ) {
+    /*
     return this.apiClient.post<
     never,
     operations['cosigBySystem']['responses']['200']['content']['application/json'],
     operations['cosigBySystem']['requestBody']['content']['application/json']
   >('/cosig-system', {signedAggTransactionPayload: signedAggTransaction.payload})
+  */
+  return this.apiClient.post('/cosig-system', {signedAggTransactionPayload: signedAggTransaction.payload})
   }
 }

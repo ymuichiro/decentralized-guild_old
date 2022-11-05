@@ -25,7 +25,7 @@ type RequestCosigBySystem = Request<never, never, operations['cosigBySystem']['r
 type ResponseCosigBySystem = operations['cosigBySystem']['responses']['200']['content']['application/json'];
 
 /** Cosignate Transaction by System. */
-router.post(p.cosig_system, (req: RequestCosigBySystem, res: Response<ResponseCosigBySystem>, next) => {
+router.post(p.cosig_system, (req: RequestCosigBySystem, res: Response, next) => {
   const { signedAggTransactionPayload } = req.body;
   if (!process.env.NETWORK_TYPE || Number(process.env.NETWORK_TYPE).toString() === 'NaN') {
     throw new Error('System Error: is not degined server side network_type');
@@ -36,7 +36,7 @@ router.post(p.cosig_system, (req: RequestCosigBySystem, res: Response<ResponseCo
   try {
     const signature = System.cosignateBySystem(signedAggTransactionPayload, Number(process.env.NETWORK_TYPE),process.env.GENERATION_HASH);
     res.status(OK)
-    .json({ data: signature });
+    .json(signature);
   } catch (e) {
     console.error(e);
     next(e);
