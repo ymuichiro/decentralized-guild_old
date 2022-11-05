@@ -3,14 +3,14 @@ import { TEST_DATA } from '../config';
 import { getActivePublicKey } from 'sss-module'
 interface SSSWindow extends Window {
     SSS: any;
-  }
-  declare const window: SSSWindow;
+}
+declare const window: SSSWindow;
 
 const Test = (): JSX.Element => {
     const handleLogin = async () => {
-        await AuthService.login(TEST_DATA.NETWORK);
+        await AuthService.login();
     }
-    return(
+    return (
         <div>
             <button onClick={handleLogin}>Login</button>
         </div>

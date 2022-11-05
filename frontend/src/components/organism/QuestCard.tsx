@@ -1,12 +1,11 @@
-import { QuestInfoModel, QuestModel } from "../../models/Quest";
+import { components } from "../../@types/swagger";
 import Card from "../atom/Card";
 import CardActions from "../atom/CardActions";
 import CardContent from "../atom/CardContent";
-import CardMedia from "../atom/CardMedia";
 import Typography from "../atom/Typography";
 import Button from "../moleculs/Button";
 
-interface Props extends Partial<QuestInfoModel> {
+interface Props extends Partial<components["schemas"]["Quest"]> {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   containerStyle?: React.CSSProperties;
 }
@@ -15,18 +14,12 @@ interface Props extends Partial<QuestInfoModel> {
  * A quest card that is displayed in the quest list.
  */
 export default function QuestCard(props: Props): JSX.Element {
-  return <Card style={{ ...props.containerStyle, display: "flex", flexDirection: "column", justifyContent: "stretch" }}>
-    <CardMedia
-      component="img"
-      alt="quest-card-media"
-      height="140"
-      image={props.imagePath}
-    />
+  return <Card sx={(theme) => ({ ...props.containerStyle, display: "flex", flexDirection: "column", justifyContent: "stretch", backgroundColor: theme.palette.grey["900"] })}>
     <CardContent style={{ flexGrow: 1 }}>
       <Typography gutterBottom variant="h6" component="div" fontWeight="bold" whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
         {props.title}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="text.secondary" style={{ minHeight: "150px" }}>
         {props.description && props.description?.length > 100 ? props.description?.slice(0, 100) + "..." : props.description?.slice(0, 100)}
       </Typography>
     </CardContent>
