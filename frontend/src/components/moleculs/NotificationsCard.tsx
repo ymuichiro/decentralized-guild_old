@@ -1,13 +1,15 @@
 import Card from '@components/atom/Card';
 import CardContent from '@components/atom/CardContent';
 import Typography from '@components/atom/Typography';
-import { components } from '../../@types/swagger';
+import { components, operations } from '../../@types/swagger';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import List from '@components/atom/List';
 import ListItemText from '@components/atom/ListItemText';
 import ListItemButton from '@components/atom/ListItemButton';
 import ScrollBox from '@components/atom/ScrollBox';
-
+import { ApiService } from '../../service/ApiService'
+import SystemService from '../../service/SystemService'
 type Props = {
   user: components['schemas']['UserTable'] | null;
 };
@@ -18,7 +20,8 @@ type Props = {
 export default function NotificationsCard(props: Props): JSX.Element {
   const [notifications, setNotifications] = useState<
     components['schemas']['Notice'][]
-  >([
+  >(
+    [/*
     { title: "test data", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
     { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
     { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
@@ -28,15 +31,22 @@ export default function NotificationsCard(props: Props): JSX.Element {
     { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
     { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
     { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-  ]);
+  */]
+  );
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // TODO: ユーザーのパブリックキーを元に、待機中の通知を取得しsetNotificationsへ格納する
+    ApiService.getNotices({public_key: SystemService.getActivePublicAccount().publicKey})
+    .then((res)=>{
+      console.log(res.data);
+      setNotifications([...res.data])
+    })
   }, []);
 
   const onClickNotification = (item: components['schemas']['Notice']) => {
-    // TODO: item.body に JSON 形式の文字列が格納されている為、PARSE して、 Quest ID を取り出して、Quest受注承認ページへアクセスさせる
-    // JSON.parse(item.body);
+    const notification: operations['orderRequestQuest']['requestBody']['content']['application/json'] = JSON.parse(item.body);
+    // ここで取得できるのはquest_idだが、おそらく必要なのはnotice_idではないか、受注通知（onClickReceiveRequest）の段階でnotice_idは登録されていないように思われるが、深追いできなかったので断念
+    navigate('/quest-order-accept/' + notification.quest_id);
   }
 
   return (

@@ -8,7 +8,8 @@ import { CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Fragment, useEffect, useState } from 'react';
 import { components } from '../../@types/swagger';
-
+import { ApiService } from '../../service/ApiService'
+import SystemService from '../../service/SystemService'
 export default function Dashboard(): JSX.Element {
   const theme = useTheme();
   const [user, setUser] = useState<components['schemas']['UserTable'] | null>(
@@ -16,6 +17,10 @@ export default function Dashboard(): JSX.Element {
   );
 
   useEffect(() => {
+    ApiService.getUser({public_key: SystemService.getActivePublicAccount().publicKey})
+    .then((res)=>{
+      setUser(res.data);
+    })
     // TODO: ユーザーのパブリックキーを元に、 setUser へユーザー情報を格納する
   }, []);
 

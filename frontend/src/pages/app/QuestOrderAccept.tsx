@@ -4,8 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTER_PATHS } from '../../Root';
 import QuestDetailsRequestAccept from '@components/organism/QuestDetailsRequestAccept';
 import { ApiService } from '@service/ApiService';
+import QuestService from '@service/QuestService';
 import { SymbolExplorerService } from '@service/SymbolExplorerService';
-
+import { TEST_DATA } from '../../config'
 type Props = {
   notificationId: string;
 };
@@ -52,13 +53,16 @@ const QuestOrderAccept = (): JSX.Element => {
   }, []);
 
   /** クエストを受ける時 */
-  const onSubmitHandle = () => {
+  const onSubmitHandle = async () => {
     // TODO: サーバー側にトランザクション発行依頼を行い、契約内容をブロックチェーンに刻む
+    if(!questInfo) throw new Error('quest info is undefind');
+    // contract_idはquest_idで良いのかな
+    const hash = await QuestService.receivedQuest(questInfo.quest_id.toString(), questInfo.requester_public_key, TEST_DATA.FEE, TEST_DATA.NODE, TEST_DATA.NETWORK);
     // ハッカソンでの対応としてはここまでで一旦終わりとする。最後にアラートか何かでブロックチェーンエクスプローラーの該当のトランザクション情報を表示し、「書き込めましたね？」と示ればOk
     console.log("このデータを使ってトランザクションを発行する", questInfo, notification)
     window.open(
       SymbolExplorerService.getUrlForTransaction(
-        'ここに書き込み終わったHashが書けると良い',
+        hash,
         Number(import.meta.env.VITE_NETWORK_TYPE),
       ),
       '_blank',
