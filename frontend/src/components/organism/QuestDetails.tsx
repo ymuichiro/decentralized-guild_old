@@ -8,7 +8,7 @@ import Button from '@components/moleculs/Button';
 import Modal from '@mui/material/Modal';
 import { ApiService } from '@service/ApiService';
 import { useEffect, useState } from 'react';
-import { components } from '../../@types/swagger';
+import { components, operations } from '../../@types/swagger';
 import { SymbolExplorerService } from '@service/SymbolExplorerService';
 import { PublicAccount } from 'symbol-sdk/dist/src/model/account';
 
@@ -41,8 +41,9 @@ export default function QuestDetails(props: Props): JSX.Element {
     if (props.onClose) props.onClose();
   };
 
-  const onClickReceiveRequest = () => {
+  const onClickReceiveRequest = async (body: operations['orderRequestQuest']['requestBody']['content']['application/json']) => {
     // TODO: orderRequestQuest API を読んで、Requester への受注依頼の通知をサーバー側で登録する（この関数ではここまで）。（以降別ページの話）Requesterは次回ログイン時にサーバー側へ読み出しを行い、通知があれば開く --> 承諾を押すと API questSetHash を呼び出して受注Transactionを交付する。
+    await ApiService.addOrderRequestQuestNotice(body);
     if (props.onClose) props.onClose();
   }
 

@@ -14,6 +14,7 @@ export default class QuestService extends SystemService {
    * クエストを登録する
    */
   public static async request() {
+    
     // コントラクト不要。サーバーに登録するだけ
   }
 
