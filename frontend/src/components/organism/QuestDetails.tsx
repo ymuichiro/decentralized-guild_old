@@ -7,8 +7,9 @@ import Avatar from '@components/atom/Avatar';
 import Button from '@components/moleculs/Button';
 import Modal from '@mui/material/Modal';
 import { ApiService } from '@service/ApiService';
+import SystemService from '@service/SystemService';
 import { useEffect, useState } from 'react';
-import { components } from '../../@types/swagger';
+import { components, operations } from '../../@types/swagger';
 import { SymbolExplorerService } from '@service/SymbolExplorerService';
 import { PublicAccount } from 'symbol-sdk/dist/src/model/account';
 
@@ -41,8 +42,15 @@ export default function QuestDetails(props: Props): JSX.Element {
     if (props.onClose) props.onClose();
   };
 
-  const onClickReceiveRequest = () => {
-    // TODO: orderRequestQuest API を読んで、Requester への受注依頼の通知をサーバー側で登録する（この関数ではここまで）。（以降別ページの話）Requesterは次回ログイン時にサーバー側へ読み出しを行い、通知があれば開く --> 承諾を押すと API questSetHash を呼び出して受注Transactionを交付する。
+  const onClickReceiveRequest = async () => {
+    if (!props.quest?.quest_id) throw new Error('quest id is undefind');
+    const body: operations['orderRequestQuest']['requestBody']['content']['application/json'] = {
+      quest_id: props.quest.quest_id,
+      worker_public_key: SystemService.getActivePublicAccount().publicKey,
+      message: ''
+    }
+    console.log(body)
+    await ApiService.addOrderRequestQuestNotice(body);
     if (props.onClose) props.onClose();
   }
 
@@ -206,7 +214,7 @@ export default function QuestDetails(props: Props): JSX.Element {
                 <Button
                   fullwidth
                   color={'primary'}
-                  onClick={() => onClickModalCloseRequest()}
+                  onClick={() => onClickReceiveRequest()}
                 >
                   受ける
                 </Button>

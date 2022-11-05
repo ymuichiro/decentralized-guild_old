@@ -49,18 +49,18 @@ export class ApiService {
     }
   }
 
-    /** クエストの詳細を取得する */
-    public static async getQuest(params: operations["getQuest"]["parameters"]["query"]) {
-      try {
-        const res = await this.apiClient.get("/quest", {params});
-        return {
-          ...res,
-          ...res.data as operations["getQuest"]["responses"]["200"]["content"]["application/json"],
-        }
-      } catch {
-        throw new Error("サーバーへのクエスト登録に失敗しました。再度お試し下さい");
+  /** クエストの詳細を取得する */
+  public static async getQuest(params: operations["getQuest"]["parameters"]["query"]) {
+    try {
+      const res = await this.apiClient.get("/quest", {params});
+      return {
+        ...res,
+        ...res.data as operations["getQuest"]["responses"]["200"]["content"]["application/json"],
       }
+    } catch {
+      throw new Error("サーバーへのクエスト登録に失敗しました。再度お試し下さい");
     }
+  }
 
   /** 受注待ちのクエスト一覧を表示する */
   public static async getQuests() {
@@ -69,6 +69,19 @@ export class ApiService {
       return {
         ...res,
         ...res.data as operations["getQuests"]["responses"]["200"]["content"]["application/json"],
+      }
+    } catch {
+      throw new Error("サーバーとの通信に失敗しました。再度お試しください");
+    }
+  }
+
+  /** クエストの受注をリクエストし通知する */
+  public static async addOrderRequestQuestNotice(body: operations['orderRequestQuest']['requestBody']['content']['application/json']) {
+    try {
+      const res = await this.apiClient.post("/quest/order-request", body);
+      return {
+        ...res,
+        ...res.data as operations['orderRequestQuest']['responses']['200']['content']['application/json'],
       }
     } catch {
       throw new Error("サーバーとの通信に失敗しました。再度お試しください");
@@ -186,6 +199,6 @@ export class ApiService {
     operations['cosigBySystem']['requestBody']['content']['application/json']
   >('/cosig-system', {signedAggTransactionPayload: signedAggTransaction.payload})
   */
-  return this.apiClient.post('/cosig-system', {signedAggTransactionPayload: signedAggTransaction.payload})
+    return this.apiClient.post('/cosig-system', {signedAggTransactionPayload: signedAggTransaction.payload})
   }
 }
