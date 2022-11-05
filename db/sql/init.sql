@@ -34,10 +34,11 @@ CREATE TABLE IF NOT EXISTS quest (
 );
 
 CREATE TABLE IF NOT EXISTS notice (
+  `notice_id`             INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
   `public_key`            CHAR(64) NOT NULL,
   `title`                 TEXT,
   `body`                  TEXT,
-  `created`               DATETIME,
+  `created`               DATETIME
 );
 
 -- ******************************************
@@ -140,42 +141,42 @@ INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, descrip
 
 INSERT INTO notice (title, body, public_key, created) VALUES (
   "notice a",
-  "notice body A",
+  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
   "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
   now()
 );
 
 INSERT INTO notice (title, body, public_key, created) VALUES (
   "notice b notice b notice b notice b notice b notice b",
-  "notice body B notice body B notice body B notice body B notice body B notice body B",
+  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
   "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
   now()
 );
 
 INSERT INTO notice (title, body, public_key, created) VALUES (
   "notice c",
-  "notice body C",
+  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
   "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
   now()
 );
 
 INSERT INTO notice (title, body, public_key, created) VALUES (
   "notice d",
-  "notice body D",
+  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
   "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
   now()
 );
 
 INSERT INTO notice (title, body, public_key, created) VALUES (
   "notice e",
-  "notice body E",
+  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
   "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
   now()
 );
 
 INSERT INTO notice (title, body, public_key, created) VALUES (
   "notice c",
-  "notice body C",
+  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
   "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
   now()
 );

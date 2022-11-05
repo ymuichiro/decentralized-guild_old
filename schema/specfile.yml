@@ -482,7 +482,33 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Notice"
+                      $ref: "#/components/schemas/NoticeTable"
+  /notice:
+    get:
+      tags:
+        - notice
+      summary: get notice
+      operationId: getNotice
+      parameters:
+        - in: query
+          name: noticeId
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                     - $ref: "#/components/schemas/NoticeTable"
   /transaction/announce-aggregate-bonded:
     post:
       tags:
@@ -644,6 +670,26 @@ components:
         - public_key
         - created
       properties:
+        title:
+          type: string
+        body:
+          type: string
+        public_key:
+          type: string
+        created:
+          type: number
+          description: new Date().getTime()
+    NoticeTable:
+      type: object
+      required:
+        - notice_id
+        - title
+        - body
+        - public_key
+        - created
+      properties:
+        notice_id:
+          type: number
         title:
           type: string
         body:

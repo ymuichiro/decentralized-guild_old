@@ -163,9 +163,14 @@ export class Notice extends Database {
   private constructor() {
     super();
   }
+  static async find(notice_id: number) {
+    const query = 'SELECT *, UNIX_TIMESTAMP(created) AS created FROM notice WHERE notice_id = ?;';
+    const res = await this.query<Schema['NoticeTable'][]>(query, notice_id);
+    return res.length === 0 ? null : res[0];
+  }
   static async list(public_key: string) {
     const query = 'SELECT *, UNIX_TIMESTAMP(created) AS created FROM notice WHERE public_key = ?;';
-    const res = await this.query<Schema['Notice'][]>(query, public_key);
+    const res = await this.query<Schema['NoticeTable'][]>(query, public_key);
     return res;
   }
   static async count(public_key: string) {

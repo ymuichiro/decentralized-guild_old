@@ -7,23 +7,23 @@ import Avatar from '@components/atom/Avatar';
 import Button from '@components/moleculs/Button';
 import Modal from '@mui/material/Modal';
 import { ApiService } from '@service/ApiService';
-import SystemService from '@service/SystemService';
 import { useEffect, useState } from 'react';
-import { components, operations } from '../../@types/swagger';
+import { components } from '../../@types/swagger';
 import { SymbolExplorerService } from '@service/SymbolExplorerService';
 import { PublicAccount } from 'symbol-sdk/dist/src/model/account';
 
 type Props = {
   /** true = open */
   isOpen: boolean;
-  onClose?: () => void;
   quest?: components['schemas']['Quest'];
+  onSubmitHandle?: () => void;
+  onRejectHandle?: () => void;
 };
 
 /**
  * Display quest details when clicked in the quest list
  */
-export default function QuestDetails(props: Props): JSX.Element {
+export default function QuestDetailsRequestAccept(props: Props): JSX.Element {
   const [requester, setRequester] = useState<
     components['schemas']['UserTable'] | null
   >(null);
@@ -38,28 +38,12 @@ export default function QuestDetails(props: Props): JSX.Element {
     }
   };
 
-  const onClickModalCloseRequest = () => {
-    if (props.onClose) props.onClose();
-  };
-
-  const onClickReceiveRequest = async () => {
-    if (!props.quest?.quest_id) throw new Error('quest id is undefind');
-    const body: operations['orderRequestQuest']['requestBody']['content']['application/json'] = {
-      quest_id: props.quest.quest_id,
-      worker_public_key: SystemService.getActivePublicAccount().publicKey,
-      message: '是非やらせて下さい！'
-    }
-    await ApiService.addOrderRequestQuestNotice(body);
-    if (props.onClose) props.onClose();
-  }
-
   useEffect(() => {
     let mounted = true;
     if (props.isOpen && props.quest?.requester_public_key) {
       ApiService.getUser({ public_key: props.quest.requester_public_key })
         .then((e) => {
           if (e.data && mounted) {
-            console.log(e.data);
             setRequester({ ...e.data });
           }
         })
@@ -77,7 +61,7 @@ export default function QuestDetails(props: Props): JSX.Element {
   return (
     <Modal
       open={props.isOpen}
-      onClose={props.onClose}
+      onClose={props.onRejectHandle}
       aria-labelledby='quest-detail-modal'
       aria-describedby='showing-quest-details'
       closeAfterTransition
@@ -135,7 +119,7 @@ export default function QuestDetails(props: Props): JSX.Element {
               >
                 <Avatar
                   src={requester?.icon || undefined}
-                  style={{ width: '100%', height: 'auto', maxWidth: '100px' }}
+                  style={{ width: '100%', height: 'auto', maxWidth: '100px', aspectRatio: "1/1" }}
                   component={'a'}
                   href={getRequesterExplorerUrl(requester?.public_key)}
                   target='_blank'
@@ -202,21 +186,20 @@ export default function QuestDetails(props: Props): JSX.Element {
             <Grid container direction='row' spacing={3}>
               <Grid item xs={6}>
                 <Button
-
-                  color={'secondary'}
-                  onClick={() => onClickModalCloseRequest()}
+                  color={'primary'}
+                  onClick={() => props?.onSubmitHandle && props.onSubmitHandle()}
                   style={{ width: "100%" }}
                 >
-                  閉じる
+                  受ける
                 </Button>
               </Grid>
               <Grid item xs={6}>
                 <Button
-                  color={'primary'}
-                  onClick={() => onClickReceiveRequest()}
+                  color={'secondary'}
+                  onClick={() => props?.onRejectHandle && props.onRejectHandle()}
                   style={{ width: "100%" }}
                 >
-                  受ける
+                  閉じる
                 </Button>
               </Grid>
             </Grid>

@@ -45,6 +45,9 @@ export interface paths {
   '/notices': {
     get: operations['getNotices'];
   };
+  '/notice': {
+    get: operations['getNotice'];
+  };
   '/transaction/announce-aggregate-bonded': {
     post: operations['announceAggregateBonded'];
   };
@@ -88,6 +91,14 @@ export interface components {
       created: number;
     };
     Notice: {
+      title: string;
+      body: string;
+      public_key: string;
+      /** @description new Date().getTime() */
+      created: number;
+    };
+    NoticeTable: {
+      notice_id: number;
       title: string;
       body: string;
       public_key: string;
@@ -405,7 +416,24 @@ export interface operations {
       200: {
         content: {
           'application/json': {
-            data: components['schemas']['Notice'][];
+            data: components['schemas']['NoticeTable'][];
+          };
+        };
+      };
+    };
+  };
+  getNotice: {
+    parameters: {
+      query: {
+        noticeId: number;
+      };
+    };
+    responses: {
+      /** Successful */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['NoticeTable'] | null;
           };
         };
       };

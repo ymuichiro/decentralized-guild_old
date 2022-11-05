@@ -168,10 +168,23 @@ export class ApiService {
   /** ユーザーの通知情報を取得する */
   public static async getNotices(params:operations["getNotices"]["parameters"]["query"]){
     try {
-      const res = await this.apiClient.post("/notices", params);
+      const res = await this.apiClient.get("/notices", {params});
       return {
         ...res,
         ...res.data as operations["getNotices"]["responses"]["200"]["content"]["application/json"],
+      }
+    } catch {
+      throw new Error("サーバーへのクエスト登録に失敗しました。再度お試し下さい");
+    }
+  }
+
+  /** ユーザーの通知情報を取得する */
+  public static async getNotice(params:operations["getNotice"]["parameters"]["query"]){
+    try {
+      const res = await this.apiClient.get("/notice", {params});
+      return {
+        ...res,
+        ...res.data as operations["getNotice"]["responses"]["200"]["content"]["application/json"],
       }
     } catch {
       throw new Error("サーバーへのクエスト登録に失敗しました。再度お試し下さい");

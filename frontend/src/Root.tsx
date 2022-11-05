@@ -34,7 +34,7 @@ export const ROUTER_PATHS = {
     element: <QuestRequest />,
   },
   questOrderAccept: {
-    path: "/quest-order-accept",
+    path: "/quest-order-accept/:notificationId", // TODO: そもそもクエスト以外の通知もあるので、ハッカソン終了後、ここのやり方は見直す
     element: <QuestOrderAccept />,
   },
   test: {

@@ -65,9 +65,8 @@ export default function QuestCard(props: Props): JSX.Element {
       <CardActions style={{ justifyContent: 'center', padding: 0 }}>
         <Button
           size='small'
-          fullwidth
           onClick={props.onClick}
-          style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+          style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0, width: "100%" }}
         >
           詳細を確認する
         </Button>
