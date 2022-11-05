@@ -2,6 +2,8 @@ import { joinGuildAggregateTransaction } from '../contracts/joinGuildAggregateTr
 import { establishGuildTransaction } from '../contracts/establishGuildTransaction';
 import { Network, NodeInfo } from '../models/Network';
 import SystemService from './SystemService';
+import { setTransaction, requestSignWithCosignatories } from 'sss-module';
+import { announceTransaction } from '../contracts/announce';
 
 /**
  * ギルド関連のサービス
@@ -40,16 +42,20 @@ export default class GuildService extends SystemService {
    * ギルドオーナー希望者によるギルドの作成
    */
   public static async establishGuild(
-    guildOwnerPublicKey: string,
-    guildMosaicId: string,
-    guildOwnerMosaicIdsMetadataKey: string,
+    //guildMosaicId: string,
+    //guildOwnerMosaicIdsMetadataKey: string,
     mosaicSupplyAmount: number,
     network: Network,
+    nodeInfo: NodeInfo
   ) {
     const applicantAccount = this.getActivePublicAccount();
     const systemAccount = this.getSystemPublicAccount();
-    // 一旦認識合わせ後
-    // await establishGuildTransaction();
-    // await this.sendToCosigTransaction();
+    const establishTransaction = establishGuildTransaction(applicantAccount.publicKey, mosaicSupplyAmount, network);
+    // 以下削除する
+    console.log(establishTransaction.guildOwnerAcc);
+
+    setTransaction(establishTransaction.aggregateTransaction);
+    const signed = await requestSignWithCosignatories([establishTransaction.guildOwnerAcc])
+    announceTransaction(signed, nodeInfo)
   }
 }

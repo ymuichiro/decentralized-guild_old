@@ -45,6 +45,9 @@ export interface paths {
   '/transaction/announce-aggregate-bonded': {
     post: operations['announceAggregateBonded'];
   };
+  '/transaction/cosig-by-system': {
+    post: operations['cosigBySystem'];
+  };
 }
 
 export interface components {
@@ -98,6 +101,9 @@ export interface components {
       guild_id: number;
       /** @description new Date().getTime() */
       created: number;
+    };
+    Signature: {
+      signature: string;
     };
   };
 }
@@ -395,9 +401,29 @@ export interface operations {
       content: {
         'application/json': {
           /** @description payload */
-          signedAggTransaction?: string;
+          signedAggTransactionPayload: string;
           /** @description payload */
-          signedHashLockTransaction?: string;
+          signedHashLockTransactionPayload: string;
+        };
+      };
+    };
+  };
+  cosigBySystem: {
+    responses: {
+      /** Successful operation */
+      200: {
+        content: {
+          'application/json': {
+            data: string;
+          };
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          /** @description payload */
+          signedAggTransactionPayload: string;
         };
       };
     };
@@ -424,4 +450,5 @@ export enum ApiPaths {
   getGuilds = '/guilds',
   getNotices = '/notices',
   announceAggregateBonded = '/transaction/announce-aggregate-bonded',
+  cosigBySystem = '/transaction/cosig-by-system',
 }

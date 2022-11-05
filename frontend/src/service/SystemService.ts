@@ -12,7 +12,10 @@ import {
   AggregateTransaction,
   SignedTransaction,
   Transaction,
+  CosignatureSignedTransaction,
+  TransactionType,
 } from 'symbol-sdk/dist/src/model/transaction';
+import { ApiService } from './ApiService'
 import { TEST_DATA } from '../config';
 import { announceAggregateBonded, announceTransaction } from '../contracts/announce';
 import { hashLockTransaction } from '../contracts/hashLockTransaction';
@@ -105,9 +108,7 @@ export default class SystemService {
     node: NodeInfo,
     network: Network,
   ) {
-    // アグリゲートトランザクションのSSSへのセット、署名
-    setTransaction(transaction);
-    const singedTransaction = await requestSign();
+    const singedTransaction = await this.sign(transaction);
 
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
@@ -117,14 +118,11 @@ export default class SystemService {
         );
 
         // ハッシュロックトランザクションのSSSへのセット、署名
-        setTransaction(hashlockTransaction);
-        const signedHashLockTransaction = await requestSign();
+        const signedHashLockTransaction = await this.sign(hashlockTransaction);
 
         await announceAggregateBonded(
           singedTransaction,
           signedHashLockTransaction,
-          node,
-          network,
         );
         resolve(signedHashLockTransaction);
       }, 1000);
@@ -144,22 +142,18 @@ export default class SystemService {
     const signedAggTransaction = await requestSignWithCosignatories([
       cosignature,
     ]);
-
     // アグボンはハッシュロックも署名が必要なため二度SSSで署名が必要。少しラグを設けないとバグるためのsetTimeout
     return await new Promise<SignedTransaction>((resolve) => {
       setTimeout(async () => {
-        const hashlockTransaction = await hashLockTransaction(
+        const hashlockTransaction = hashLockTransaction(
           signedAggTransaction,
           network,
         );
-        setTransaction(hashlockTransaction);
-        const signedHashLockTransaction = await requestSign();
+        const signedHashLockTransaction = await this.sign(hashlockTransaction);
 
         await announceAggregateBonded(
           signedAggTransaction,
           signedHashLockTransaction,
-          node,
-          network,
         );
         resolve(signedHashLockTransaction);
       }, 1000);
@@ -169,31 +163,33 @@ export default class SystemService {
   /**
    * システムの連署を自動的に取得し、アナウンスまで行う
    */
-
-  /*
    protected static async sendWithCosigBySystemTransaction(
     signedTransaction: SignedTransaction,
     node: NodeInfo,
     network: Network,
   ) {
-    const cosignatureSignedTransaction: CosignatureSignedTransaction = 
-      await (await apiClient.post('api/cosig', {signedTransaction: signedTransaction})).data;
-    const signedAggregateTransactionNotComplete = AggregateTransaction.createFromPayload(signedTransaction.payload);
-    const aggregateTransactionCosignature = 
-      new AggregateTransactionCosignature(
-        cosignatureSignedTransaction.signature,
-        PublicAccount.createFromPublicKey(cosignatureSignedTransaction.signerPublicKey, signedAggregateTransactionNotComplete.networkType)
-      );
-    const completeAggregate = signedAggregateTransactionNotComplete.addCosignatures([aggregateTransactionCosignature]);
+    const signature = (await ApiService.cosigBySystem(signedTransaction)).data;
+    let signedPayload = signedTransaction.payload;
     const hash = 
       Transaction.createTransactionHash(
-        completeAggregate.serialize(),
+        signedPayload,
         Array.prototype.slice.call(Buffer.from(TEST_DATA.NETWORK.generationHash, 'hex'), 0)
-      );
-    const signedCompleteTransaction = new SignedTransaction(completeAggregate.serialize(), hash, signedTransaction.signerPublicKey, TransactionType.AGGREGATE_COMPLETE, network.type);
+    );
+    const cosignSignedTxs = [
+        new CosignatureSignedTransaction(hash, signature, SystemService.getSystemPublicAccount().publicKey)
+    ];
+
+    cosignSignedTxs.forEach((cosignedTx) => {
+      signedPayload += cosignedTx.version.toHex() + cosignedTx.signerPublicKey + cosignedTx.signature;
+    });
+
+    const size = `00000000${(signedPayload.length / 2).toString(16)}`;
+    const formatedSize = size.substring(size.length - 8, size.length - 8 + size.length);
+    const littleEndianSize1 = formatedSize.substring(6, 8) + formatedSize.substring(4, 6) + formatedSize.substring(2, 4) + formatedSize.substring(0, 2);
+    signedPayload = littleEndianSize1 + signedPayload.substring(8, signedPayload.length);
+    const signedCompleteTransaction = new SignedTransaction(signedPayload, hash, signedTransaction.signerPublicKey, TransactionType.AGGREGATE_COMPLETE, network.type);
     announceTransaction(signedCompleteTransaction, node);
   }
-*/
 
   /**
    * トランザクションにSSSで署名し、SignedTransactionを返す
