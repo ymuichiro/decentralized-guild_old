@@ -25,6 +25,8 @@ tags:
     description: create, info, join
   - name: notice
     description: notice for a user
+  - name: transaction
+    description: contract API
 paths:
   /user:
     get:
@@ -95,6 +97,40 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/UserTable"
+  /user/verify:
+    post:
+      tags:
+        - user
+      summary: verify user
+      operationId: verifyUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - public_key
+                - token
+              properties:
+                public_key:
+                  type: string
+                  description: User Symbol Public key
+                token:
+                  type: string
+                  description: Issur from SSS
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"  
   /quest:
     get:
       tags:
@@ -184,6 +220,42 @@ paths:
                 properties:
                   data:
                     $ref: "#/components/schemas/Sccessful"
+  /quest/order-request:
+    post:
+      tags:
+        - quest
+      summary: make an order request to the quest's "Requester"
+      operationId: orderRequestQuest
+      requestBody:
+        required: true
+        description: to blank transaction_hash, transaction_hash
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - worker_public_key
+                - quest_id
+                - message
+              properties:
+                worker_public_key:
+                  type: string
+                quest_id:
+                  type: number
+                message:
+                  type: string
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
   /quest/set-hash:
     post:
       tags:
@@ -220,7 +292,6 @@ paths:
                 properties:
                   data:
                     $ref: "#/components/schemas/Sccessful"
-
   /quests:
     get:
       tags:
@@ -411,7 +482,99 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Notice"
+                      $ref: "#/components/schemas/NoticeTable"
+  /notice:
+    get:
+      tags:
+        - notice
+      summary: get notice
+      operationId: getNotice
+      parameters:
+        - in: query
+          name: noticeId
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                     - $ref: "#/components/schemas/NoticeTable"
+  /transaction/announce-aggregate-bonded:
+    post:
+      tags:
+        - transaction
+      summary: announce aggregate bonded
+      operationId: announceAggregateBonded
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - signedAggTransactionPayload
+                - signedHashLockTransactionPayload
+              properties:
+                signedAggTransactionPayload:
+                  type: string
+                  description: payload
+                signedHashLockTransactionPayload:
+                  type: string
+                  description: payload
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Sccessful"
+  /transaction/cosig-by-system:
+    post:
+      tags:
+        - transaction
+      summary: cosignate aggregate transaction by system
+      operationId: cosigBySystem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - signedAggTransactionPayload
+              properties:
+                signedAggTransactionPayload:
+                  type: string
+                  description: payload
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: string
+                    items:
+                      $ref: "#/components/schemas/Signature"
 components:
   schemas:
     Sccessful:
@@ -516,6 +679,26 @@ components:
         created:
           type: number
           description: new Date().getTime()
+    NoticeTable:
+      type: object
+      required:
+        - notice_id
+        - title
+        - body
+        - public_key
+        - created
+      properties:
+        notice_id:
+          type: number
+        title:
+          type: string
+        body:
+          type: string
+        public_key:
+          type: string
+        created:
+          type: number
+          description: new Date().getTime()
     Guild:
       type: object
       required:
@@ -543,3 +726,10 @@ components:
             created:
               type: number
               description: new Date().getTime()
+    Signature:
+      type: object
+      required:
+        - signature
+      properties:
+        signature:
+          type: string

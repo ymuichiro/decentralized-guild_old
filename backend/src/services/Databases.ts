@@ -6,12 +6,7 @@ type Schema = components['schemas'];
 class Database {
   protected constructor() {}
   static async query<T>(sql: string, ...values: (string | number | boolean | undefined | null)[]): Promise<T> {
-    const {
-      DATABASE_HOST: host,
-      DATABASE_USER_NAME: user,
-      DATABASE_NAME: database,
-      DATABASE_USER_PASS: password,
-    } = process.env;
+    const { DATABASE_HOST: host, MYSQL_USER: user, MYSQL_DATABASE: database, MYSQL_PASSWORD: password } = process.env;
     const connection = mysql.createConnection({ host, user, database, password });
     try {
       const result = new Promise<T>((resolve, reject) => {
@@ -168,9 +163,14 @@ export class Notice extends Database {
   private constructor() {
     super();
   }
+  static async find(notice_id: number) {
+    const query = 'SELECT *, UNIX_TIMESTAMP(created) AS created FROM notice WHERE notice_id = ?;';
+    const res = await this.query<Schema['NoticeTable'][]>(query, notice_id);
+    return res.length === 0 ? null : res[0];
+  }
   static async list(public_key: string) {
     const query = 'SELECT *, UNIX_TIMESTAMP(created) AS created FROM notice WHERE public_key = ?;';
-    const res = await this.query<Schema['Notice'][]>(query, public_key);
+    const res = await this.query<Schema['NoticeTable'][]>(query, public_key);
     return res;
   }
   static async count(public_key: string) {

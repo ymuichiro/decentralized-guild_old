@@ -11,10 +11,16 @@ export interface paths {
   '/users': {
     get: operations['getUsers'];
   };
+  '/user/verify': {
+    post: operations['verifyUser'];
+  };
   '/quest': {
     get: operations['getQuest'];
     put: operations['updateQuest'];
     post: operations['addQuest'];
+  };
+  '/quest/order-request': {
+    post: operations['orderRequestQuest'];
   };
   '/quest/set-hash': {
     post: operations['setQuestHash'];
@@ -38,6 +44,15 @@ export interface paths {
   };
   '/notices': {
     get: operations['getNotices'];
+  };
+  '/notice': {
+    get: operations['getNotice'];
+  };
+  '/transaction/announce-aggregate-bonded': {
+    post: operations['announceAggregateBonded'];
+  };
+  '/transaction/cosig-by-system': {
+    post: operations['cosigBySystem'];
   };
 }
 
@@ -82,6 +97,14 @@ export interface components {
       /** @description new Date().getTime() */
       created: number;
     };
+    NoticeTable: {
+      notice_id: number;
+      title: string;
+      body: string;
+      public_key: string;
+      /** @description new Date().getTime() */
+      created: number;
+    };
     Guild: {
       owner_public_key: string;
       name: string;
@@ -92,6 +115,9 @@ export interface components {
       guild_id: number;
       /** @description new Date().getTime() */
       created: number;
+    };
+    Signature: {
+      signature: string;
     };
   };
 }
@@ -139,6 +165,28 @@ export interface operations {
           'application/json': {
             data: components['schemas']['UserTable'][];
           };
+        };
+      };
+    };
+  };
+  verifyUser: {
+    responses: {
+      /** Successful operation */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          /** @description User Symbol Public key */
+          public_key: string;
+          /** @description Issur from SSS */
+          token: string;
         };
       };
     };
@@ -200,6 +248,28 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['Quest'];
+      };
+    };
+  };
+  orderRequestQuest: {
+    responses: {
+      /** Successful */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    /** to blank transaction_hash, transaction_hash */
+    requestBody: {
+      content: {
+        'application/json': {
+          worker_public_key: string;
+          quest_id: number;
+          message: string;
+        };
       };
     };
   };
@@ -346,8 +416,67 @@ export interface operations {
       200: {
         content: {
           'application/json': {
-            data: components['schemas']['Notice'][];
+            data: components['schemas']['NoticeTable'][];
           };
+        };
+      };
+    };
+  };
+  getNotice: {
+    parameters: {
+      query: {
+        noticeId: number;
+      };
+    };
+    responses: {
+      /** Successful */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['NoticeTable'] | null;
+          };
+        };
+      };
+    };
+  };
+  announceAggregateBonded: {
+    responses: {
+      /** Successful operation */
+      200: {
+        content: {
+          'application/json': {
+            data: components['schemas']['Sccessful'];
+          };
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          /** @description payload */
+          signedAggTransactionPayload: string;
+          /** @description payload */
+          signedHashLockTransactionPayload: string;
+        };
+      };
+    };
+  };
+  cosigBySystem: {
+    responses: {
+      /** Successful operation */
+      200: {
+        content: {
+          'application/json': {
+            data: string;
+          };
+        };
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          /** @description payload */
+          signedAggTransactionPayload: string;
         };
       };
     };
@@ -360,9 +489,11 @@ export enum ApiPaths {
   getUser = '/user',
   addUser = '/user',
   getUsers = '/users',
+  verifyUser = '/user/verify',
   getQuest = '/quest',
   addQuest = '/quest',
   updateQuest = '/quest',
+  orderRequestQuest = '/quest/order-request',
   setQuestHash = '/quest/set-hash',
   getQuests = '/quests',
   getGuildQuest = '/guild/quest',
@@ -372,4 +503,7 @@ export enum ApiPaths {
   addGuild = '/guild',
   getGuilds = '/guilds',
   getNotices = '/notices',
+  getNotice = '/notice',
+  announceAggregateBonded = '/transaction/announce-aggregate-bonded',
+  cosigBySystem = '/transaction/cosig-by-system',
 }

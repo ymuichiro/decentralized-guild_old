@@ -21,3 +21,8 @@ export enum QuestStatus {
   WORKING = 'WORKING',
   COMPLETED = 'COMPLETED',
 }
+
+export enum Evaluation {
+  GOOD,
+  BAD,
+}

@@ -1,14 +1,7 @@
 server {
-    server_name api.example.com;
+    server_name decentralized-guild.symbol-community.com
     location / {
-        proxy_pass    http://localhost:1337/;
+        proxy_pass    http://localhost:3001/;
     }
 }
 
-server {
-    server_name example.com;
-    root /var/www/html;
-    location / {
-        proxy_pass      http://localhost:3000;
-    }
-}

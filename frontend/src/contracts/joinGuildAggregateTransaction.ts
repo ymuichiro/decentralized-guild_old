@@ -14,7 +14,7 @@ import {
  * ギルド参加申請を行う際のコントラクト
  * モザイクIDは下位ギルドモザイクトークンを指定する
  */
-export const createJoinGuildAggregateTransaction = async function (
+export const joinGuildAggregateTransaction = async function (
   applicantPublicKey: string,
   guildOwnerPublicKey: string,
   lowGuildMosaicId: string,
@@ -42,12 +42,17 @@ export const createJoinGuildAggregateTransaction = async function (
     network.type
   );
 
-  // TODO: これ何か用確認
-  const dummy = TransferTransaction.create(
+  // システムが徴収する手数料を作成する
+  const taxTx = TransferTransaction.create(
     Deadline.createEmtpy(),
     ownerPublicAccount.address,
-    [],
-    PlainMessage.create("applicant"),
+    [
+      new Mosaic(
+        new MosaicId(network.currencyMosaicId),
+        UInt64.fromUint(systemFee.createAccount * Math.pow(10, network.networkCurrencyDivisibility))
+      ),
+    ],
+    PlainMessage.create("Create Account Fee"),
     network.type
   );
 
@@ -56,29 +61,11 @@ export const createJoinGuildAggregateTransaction = async function (
     Deadline.create(network.epochAdjustment),
     [
       guildMosaicTransfer.toAggregate(ownerPublicAccount),
-      dummy.toAggregate(applicantPublicAccount),
+      taxTx.toAggregate(applicantPublicAccount),
     ],
     network.type,
     []
   ).setMaxFeeForAggregate(100, 1);
-
-  // システムが徴収する手数料を作成する
-  if (systemFee.createAccount !== 0) {
-    const taxTx = TransferTransaction.create(
-      Deadline.createEmtpy(),
-      ownerPublicAccount.address,
-      [
-        new Mosaic(
-          new MosaicId(network.currencyMosaicId),
-          UInt64.fromUint(systemFee.createAccount)
-        ),
-      ],
-      PlainMessage.create("Create Account Fee"),
-      network.type
-    );
-    aggTx.innerTransactions.push(taxTx.toAggregate(applicantPublicAccount));
-    aggTx = aggTx.setMaxFeeForAggregate(100, 1);
-  }
 
   // 作成完了したコントラクトを返却
   return aggTx;

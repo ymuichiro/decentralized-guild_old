@@ -19,7 +19,7 @@ import { Network } from "../models/Network";
  * @param network
  * @returns
  */
-export const createRecievedOrderAggregateTransaction = async function (
+export const recievedQuestAggregateTransaction = function (
   contractId: string,
   requesterPublicKey: string,
   workerPublicKey: string,
@@ -66,11 +66,11 @@ export const createRecievedOrderAggregateTransaction = async function (
   const aggregateTransaction = AggregateTransaction.createBonded(
     Deadline.create(network.epochAdjustment),
     [
-      transgerTransaction1.toAggregate(requesterPublic),
-      transgerTransaction2.toAggregate(workerPublic),
+      transgerTransaction1.toAggregate(workerPublic),
+      transgerTransaction2.toAggregate(requesterPublic),
     ],
-    network.type
-  ).setMaxFeeForAggregate(100, 2);
-
+    network.type,
+    []
+  ).setMaxFeeForAggregate(100, 1);
   return aggregateTransaction;
 };

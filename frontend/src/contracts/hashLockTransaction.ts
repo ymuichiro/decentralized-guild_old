@@ -11,10 +11,10 @@ import {
 /**
  * ハッシュロックトランザクションを生成する
  */
-export const createJoinHashLockTransaction = async function (
+export const hashLockTransaction = function (
   signedAggTransaction: SignedTransaction,
   network: Network
-): Promise<LockFundsTransaction> {
+): LockFundsTransaction {
   // 作成
   return HashLockTransaction.create(
     Deadline.create(network.epochAdjustment),

@@ -1,7 +1,9 @@
-import { createJoinGuildAggregateTransaction } from '../contracts/createJoinGuildAggregateTransaction';
+import { joinGuildAggregateTransaction } from '../contracts/joinGuildAggregateTransaction';
 import { establishGuildTransaction } from '../contracts/establishGuildTransaction';
 import { Network, NodeInfo } from '../models/Network';
 import SystemService from './SystemService';
+import { setTransaction, requestSignWithCosignatories } from 'sss-module';
+import { announceTransaction } from '../contracts/announce';
 
 /**
  * ギルド関連のサービス
@@ -25,31 +27,35 @@ export default class GuildService extends SystemService {
     network: Network,
   ) {
     const systemFees = await this.getSystemFees();
-    const applicantPublicKey = this.getActivePublicKey();
-    const contract = await createJoinGuildAggregateTransaction(
-      applicantPublicKey,
+    const applicantAccount = this.getActivePublicAccount();
+    const contract = await joinGuildAggregateTransaction(
+      applicantAccount.publicKey,
       guildOwnerPublicKey,
       guildMosaicId,
       systemFees,
       network,
     );
-    return await this.sendAggregateTransaction(contract, node, network);
+    return await this.sendAggregateTransaction(contract, network);
   }
 
   /**
    * ギルドオーナー希望者によるギルドの作成
    */
   public static async establishGuild(
-    guildOwnerPublicKey: string,
-    guildMosaicId: string,
-    guildOwnerMosaicIdsMetadataKey: string,
+    //guildMosaicId: string,
+    //guildOwnerMosaicIdsMetadataKey: string,
     mosaicSupplyAmount: number,
     network: Network,
+    nodeInfo: NodeInfo
   ) {
-    const applicantPublicKey = this.getActivePublicKey();
-    const systemPublicKey = this.getSystemPublicKey();
-    // 一旦認識合わせ後
-    // await establishGuildTransaction();
-    // await this.sendToCosigTransaction();
+    const applicantAccount = this.getActivePublicAccount();
+    const systemAccount = this.getSystemPublicAccount();
+    const establishTransaction = establishGuildTransaction(applicantAccount.publicKey, mosaicSupplyAmount, network);
+    // 以下削除する
+    console.log(establishTransaction.guildOwnerAcc);
+
+    setTransaction(establishTransaction.aggregateTransaction);
+    const signed = await requestSignWithCosignatories([establishTransaction.guildOwnerAcc])
+    announceTransaction(signed, nodeInfo)
   }
 }

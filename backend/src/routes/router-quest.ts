@@ -1,7 +1,7 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 import { operations } from '../@types/swagger';
-import { Quest } from '../services/Databases';
+import { Quest, Notice } from '../services/Databases';
 
 // Constants
 const router = Router();
@@ -12,6 +12,7 @@ export const p = {
   quest: '/quest',
   questSetHash: '/quest/set-hash',
   quests: '/quests',
+  questOrderRequest: '/quest/order-request',
 } as const;
 
 type RequestGetQuest = Request<never, never, never, operations['getQuest']['parameters']['query']>;
@@ -26,6 +27,9 @@ type RequestUpdateQuest = Request<never, never, operations['updateQuest']['reque
 type ResponseUpdateQuest = operations['updateQuest']['responses']['200']['content']['application/json'];
 type RequestGetQuests = Request<never, never, never, never>;
 type ResponseGetQuests = operations['getQuests']['responses']['200']['content']['application/json'];
+// prettier-ignore
+type RequestOrderRequest = Request<never, never, operations['orderRequestQuest']['requestBody']['content']['application/json']>;
+type ResponseOrderRequest = operations['orderRequestQuest']['responses']['200']['content']['application/json'];
 
 /** Get quest info. */
 router.get(p.quest, (req: RequestGetQuest, res: Response<ResponseGetQuest>, next) => {
@@ -82,6 +86,27 @@ router.get(p.quests, (_: RequestGetQuests, res: Response<ResponseGetQuests>, nex
   Quest.list()
     .then((r) => res.json({ data: r }))
     .catch(next);
+});
+
+/** make an order request to the quest's "Requester" */
+router.post(p.questOrderRequest, (req: RequestOrderRequest, res: Response<ResponseOrderRequest>, next) => {
+  const { worker_public_key, message, quest_id } = req.body;
+  // quest id の requester を取得
+  Quest.find(quest_id)
+    .then((questField) => {
+      if (!questField) throw new Error('指定された Quest ID が見つかりませんでした');
+      return Notice.insert({
+        title: `[QUEST]「${questField.title}」へ応募がありました。お仕事を依頼しますか？応募者からのメッセージ：${message}`,
+        public_key: questField.requester_public_key,
+        body: JSON.stringify({ quest_id, worker_public_key, message }),
+      });
+    })
+    .then(() => {
+      res.status(OK).json({ data: { status: 'ok', message: 'ok' } });
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 export default router;

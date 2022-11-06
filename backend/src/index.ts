@@ -3,7 +3,10 @@ import logger from 'jet-logger';
 import server from './server';
 
 // Constants
-const port = process.env.APP_PORT || 3001;
+let port: number = 3001;
+if (Number(process.env.PORT).toString() !== 'NaN') {
+  port = Number(process.env.PORT);
+}
 
 // Start server
 server.listen(port, () => {
