@@ -105,7 +105,6 @@ export default class SystemService {
    */
   protected static async sendAggregateTransaction(
     transaction: AggregateTransaction,
-    node: NodeInfo,
     network: Network,
   ) {
     const singedTransaction = await this.sign(transaction);
@@ -124,7 +123,7 @@ export default class SystemService {
           singedTransaction,
           signedHashLockTransaction,
         );
-        resolve(signedHashLockTransaction);
+        resolve(singedTransaction);
       }, 1000);
     });
   }

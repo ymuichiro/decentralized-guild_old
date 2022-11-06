@@ -35,7 +35,7 @@ export default class GuildService extends SystemService {
       systemFees,
       network,
     );
-    return await this.sendAggregateTransaction(contract, node, network);
+    return await this.sendAggregateTransaction(contract, network);
   }
 
   /**

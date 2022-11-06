@@ -7,7 +7,6 @@ import Quests from '@pages/app/Quests';
 import QuestRequest from '@pages/app/QuestRequest';
 import QuestOrderAccept from '@pages/app/QuestOrderAccept';
 
-import Test from '@pages/Test';
 export const ROUTER_PATHS = {
   _: {
     path: "/*",
@@ -36,11 +35,6 @@ export const ROUTER_PATHS = {
   questOrderAccept: {
     path: "/quest-order-accept/:notificationId", // TODO: そもそもクエスト以外の通知もあるので、ハッカソン終了後、ここのやり方は見直す
     element: <QuestOrderAccept />,
-  },
-  test: {
-    path: "/test",
-    name: "Test",
-    element: <Test />,
   },
 }
 

@@ -72,7 +72,6 @@ const QuestOrderAccept = (): JSX.Element => {
       questInfo.quest_id.toString(),
       notification.worker_public_key,
       TEST_DATA.FEE,
-      TEST_DATA.NODE,
       TEST_DATA.NETWORK,
     );
     // ハッカソンでの対応としてはここまでで一旦終わりとする。最後にアラートか何かでブロックチェーンエクスプローラーの該当のトランザクション情報を表示し、「書き込めましたね？」と示ればOk
