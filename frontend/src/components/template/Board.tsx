@@ -1,19 +1,16 @@
-import Avatar from '@components/atom/Avatar';
+import { ReactElement } from 'react';
 
 import { useRecoilState } from 'recoil';
 import { userInformationState } from '@store/user/UserAtom';
 
 import Typography from '@components/atom/Typography';
-import IconButton from '@components/atom/IconButton';
-
-import SettingsIcon from '@mui/icons-material/Settings';
-import MosaicBox from '@components/moleculs/MosaicBox';
 
 export interface BoardProps {
   title: string;
+  children: ReactElement;
 }
 
-const Board = ({ title }: BoardProps): JSX.Element => {
+const Board = ({ title, children }: BoardProps): JSX.Element => {
   const [userInformation, setUserInformation] =
     useRecoilState(userInformationState);
 
@@ -34,6 +31,7 @@ const Board = ({ title }: BoardProps): JSX.Element => {
       <Typography component='h5' variant='h6'>
         {title}
       </Typography>
+      {children}
     </div>
   );
 };

@@ -50,9 +50,9 @@ const ProfileCard = (): JSX.Element => {
         )}
 
         <div style={{ marginRight: 'auto', marginLeft: 20 }}>
-          <Typography variant='subtitle1'>{userInformation?.name}</Typography>
-          <Typography variant='subtitle2' color='#888'>
-            worker, guild owner
+          <Typography variant='body1'>{userInformation?.name}</Typography>
+          <Typography variant='body2' color='#888'>
+            Guild Name (Owner)
           </Typography>
         </div>
 

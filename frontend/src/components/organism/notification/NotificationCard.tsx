@@ -67,7 +67,7 @@ const NotificationCard = (): JSX.Element => {
       }}
     >
       <Typography component='h5' variant='h6'>
-        Notification
+        Notification ({NOTIFICATION_CARD_TEST_EXAMPLE.length})
       </Typography>
       <div style={{ maxHeight: 300, overflow: 'auto' }}>
         {NOTIFICATION_CARD_TEST_EXAMPLE.map((item) => {

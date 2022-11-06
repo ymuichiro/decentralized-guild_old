@@ -3,11 +3,15 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { userInformationState } from '@store/user/UserAtom';
 
+import IconButton from '@components/atom/IconButton';
 import Container from '@components/atom/Container';
 import Grid from '@components/atom/Grid';
 import ProfileCard from '@components/organism/user/ProfileCard';
 import NotificationCard from '@components/organism/notification/NotificationCard';
 import Board from '@components/template/Board';
+
+import ListIcon from '@mui/icons-material/List';
+import MenuIcon from '@mui/icons-material/Menu';
 
 interface SSSWindow extends Window {
   SSS: any;
@@ -72,7 +76,12 @@ const Dashboard = (): JSX.Element => {
           justifyContent='center'
           alignItems='center'
         >
-          <Board title='Dashboard' />
+          <div style={{ marginLeft: 'auto' }}>
+            <IconButton>
+              <MenuIcon fontSize='large' />
+            </IconButton>
+          </div>
+          <Board title='Dashboard'></Board>
         </Grid>
       </Grid>
     </Container>
