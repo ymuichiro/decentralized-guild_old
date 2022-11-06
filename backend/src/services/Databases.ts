@@ -6,12 +6,7 @@ type Schema = components['schemas'];
 class Database {
   protected constructor() {}
   static async query<T>(sql: string, ...values: (string | number | boolean | undefined | null)[]): Promise<T> {
-    const {
-      DATABASE_HOST: host,
-      DATABASE_USER_NAME: user,
-      DATABASE_NAME: database,
-      DATABASE_USER_PASS: password,
-    } = process.env;
+    const { DATABASE_HOST: host, MYSQL_USER: user, MYSQL_DATABASE: database, MYSQL_PASSWORD: password } = process.env;
     const connection = mysql.createConnection({ host, user, database, password });
     try {
       const result = new Promise<T>((resolve, reject) => {
@@ -98,6 +93,23 @@ export class Quest extends Database {
     const res = await this.query<{ counter: number }[]>(query);
     return res[0].counter;
   }
+  /** Register QuestID on BlockchainNW when ordering Quest. TransactionHash at that time */
+  static async setWorkerAndTransactionHash(quest_id: number, transaction_hash: string, worker_public_key: string) {
+    const query = 'UPDATE quest SET transaction_hash = ?, worker_public_key = ? WHERE quest_id = ?';
+    return await this.query(query, transaction_hash, worker_public_key, quest_id);
+  }
+  // prettier-ignore
+  static async update(quest_id:number, field:Pick<components['schemas']['Quest'], 'nominate_guild_id' | 'title' | 'description' | 'reward'>){
+    const query = 'UPDATE quest SET nominate_guild_id = ?, title = ?, description = ?, reward = ? WHERE quest_id = ?';
+    return await this.query(
+      query,
+      field.nominate_guild_id,
+      field.title,
+      field.description,
+      field.reward,
+      quest_id,
+    )
+  }
   // prettier-ignore
   static async insert(field: Pick<components['schemas']['Quest'], 'nominate_guild_id' | 'title' | 'description' | 'reward' | 'requester_public_key'>) {
     const query = 'INSERT INTO quest (nominate_guild_id, title, description, reward, requester_public_key, status, created) VALUES (?, ?, ?, ?, ?, ?, now())';
@@ -151,9 +163,14 @@ export class Notice extends Database {
   private constructor() {
     super();
   }
+  static async find(notice_id: number) {
+    const query = 'SELECT *, UNIX_TIMESTAMP(created) AS created FROM notice WHERE notice_id = ?;';
+    const res = await this.query<Schema['NoticeTable'][]>(query, notice_id);
+    return res.length === 0 ? null : res[0];
+  }
   static async list(public_key: string) {
     const query = 'SELECT *, UNIX_TIMESTAMP(created) AS created FROM notice WHERE public_key = ?;';
-    const res = await this.query<Schema['Notice'][]>(query, public_key);
+    const res = await this.query<Schema['NoticeTable'][]>(query, public_key);
     return res;
   }
   static async count(public_key: string) {

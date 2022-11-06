@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { QuestModel } from "../../models/Quest";
 import Grid from "../atom/Grid";
 import QuestCard from "../organism/QuestCard";
 import QuestDetails from "../organism/QuestDetails";
+import { components } from "../../@types/swagger";
 
 type Props = {
-  items: QuestModel[];
+  items: components["schemas"]["QuestTable"][];
 }
 
 /**
@@ -13,22 +13,21 @@ type Props = {
  */
 export default function QuestCardList(props: Props): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [currentQuest, setCurrentQuest] = useState<string>("");
+  const [currentQuest, setCurrentQuest] = useState<number>(NaN);
 
-  const onClickQuestDetailOpenRequest = (questId: string) => {
+  const onClickQuestDetailOpenRequest = (questId: number) => {
     setCurrentQuest(questId)
     setIsModalOpen(true);
   }
 
   return <Grid container spacing={3} alignItems="stretch">
     {
-      props.items.map((item, index) => <Grid item xs={12} sm={6} md={4} key={index}>
+      props.items.map((item, index) => <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
         <QuestCard
-          title={item.info.title}
-          description={item.info.description}
-          imagePath={item.info.imagePath}
-          reward={item.info.reward}
-          onClick={() => onClickQuestDetailOpenRequest(item.id)}
+          title={item.title}
+          description={item.description}
+          reward={item.reward}
+          onClick={() => onClickQuestDetailOpenRequest(item.quest_id)}
           containerStyle={{ height: "100%" }}
         />
       </Grid>)
@@ -36,7 +35,7 @@ export default function QuestCardList(props: Props): JSX.Element {
     <QuestDetails
       isOpen={isModalOpen}
       onClose={() => setIsModalOpen(false)}
-      quest={props.items.find((e => e.id === currentQuest))}
+      quest={props.items.find((e => e.quest_id === currentQuest))}
     />
 
   </Grid>

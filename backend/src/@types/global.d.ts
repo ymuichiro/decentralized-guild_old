@@ -2,13 +2,17 @@ declare module 'process' {
   global {
     namespace NodeJS {
       interface ProcessEnv {
-        NODE_ENV?: "development" | "production";
+        NODE_ENV?: 'development' | 'production';
+        MYSQL_DATABASE?: string;
+        MYSQL_USER?: string;
+        MYSQL_PASSWORD?: string;
         DATABASE_HOST?: string;
-        DATABASE_NAME?: string;
-        DATABASE_USER_NAME?: string;
-        DATABASE_USER_PASS?: string;
-        DATABASE_TZ?: string;
-        NETWORK_TYPE?: number;
+        TZ?: string;
+        PORT?: string;
+        NETWORK_TYPE?: string;
+        SYSTEM_PUBLICKEY?: string;
+        GENERATION_HASH?: string;
+        NODE?: string;
       }
     }
   }

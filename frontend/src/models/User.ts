@@ -1,5 +1,5 @@
 export interface User {
-  publicKey: string;
-  name: string;
-  icon: string;
-}
+    name: string;
+    address: string;
+    publicKey: string;
+};

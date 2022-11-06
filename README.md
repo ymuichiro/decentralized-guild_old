@@ -1,5 +1,18 @@
 # Decentrized Guild
 
+## Setup Flow
+
+開発環境のセットアップ手順
+
+1. `.env` ファイルを作成して下さい
+2. 以下の通りコンテナの起動、実行をして下さい
+
+```sh
+docker compose up -d
+yarn installs
+yarn run dev
+```
+
 ## Test Net Accounts
 
 Worker/Requester A Bob

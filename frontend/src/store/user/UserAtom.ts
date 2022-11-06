@@ -1,14 +1,18 @@
 import { atom } from 'recoil';
 
-import { PublicAccount } from 'symbol-sdk';
 import { User } from '@models/User';
+
+import { components } from '../../@types/swagger';
+import { PublicAccount } from 'symbol-sdk/dist/src/model/account/PublicAccount';
 
 export const userPublicAccountState = atom<PublicAccount | null>({
   key: 'userPublicAccountState',
   default: null,
 });
 
-export const userInformationState = atom<User | null>({
+export const userInformationState = atom<
+  components['schemas']['UserTable'] | null
+>({
   key: 'userInformationState',
   default: null,
 });
