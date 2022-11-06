@@ -6,23 +6,30 @@ import NotificationsCard from '@components/moleculs/NotificationsCard';
 import ProfileCard from '@components/moleculs/ProfileCard';
 import { CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Fragment, useEffect, useState } from 'react';
-import { components } from '../../@types/swagger';
-import { ApiService } from '../../service/ApiService'
-import SystemService from '../../service/SystemService'
+import { Fragment, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTER_PATHS } from '../../Root';
+import { useRecoilValue } from 'recoil';
+import { userInformationState } from '@store/user/UserAtom';
+
+/**
+ * ユーザーのマイページ
+ */
 export default function Dashboard(): JSX.Element {
   const theme = useTheme();
-  const [user, setUser] = useState<components['schemas']['UserTable'] | null>(
-    null,
-  );
+  const navigate = useNavigate();
+  const rUser = useRecoilValue(userInformationState);
 
   useEffect(() => {
-    ApiService.getUser({public_key: SystemService.getActivePublicAccount().publicKey})
-    .then((res)=>{
-      setUser(res.data);
-    })
-    // TODO: ユーザーのパブリックキーを元に、 setUser へユーザー情報を格納する
+    if (!rUser) {
+      alert("正しいユーザー情報を取得できませんでした。再度ログインして下さい");
+      navigate(ROUTER_PATHS.top.path);
+    }
   }, []);
+
+  if (!rUser) {
+    return <div />
+  }
 
   return (
     <>
@@ -46,9 +53,9 @@ export default function Dashboard(): JSX.Element {
               }}
             >
               <div style={{ marginBottom: theme.spacing(2) }}>
-                <ProfileCard user={user} />
+                <ProfileCard user={rUser} />
               </div>
-              <NotificationsCard user={user} />
+              <NotificationsCard user={rUser} />
             </div>
           </Grid>
           <Grid item xs={8} style={{ height: '100%' }}>
@@ -94,11 +101,11 @@ export default function Dashboard(): JSX.Element {
                   </Grid>
                   <Grid item xs={4} style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: "30px" }}>
                     {[
-                      { title: 'Guild Management' },
-                      { title: 'Create a New Job' },
-                      { title: 'New Job from Board' },
+                      { title: 'Guild Management', path: ROUTER_PATHS.top.path },
+                      { title: 'Create a New Job', path: ROUTER_PATHS.questRequest.path },
+                      { title: 'New Job from Board', path: ROUTER_PATHS.quests.path },
                     ].map((buttonItem, index) => (
-                      <Button key={index} style={{ width: "100%" }}>
+                      <Button key={index} style={{ width: "100%" }} onClick={() => navigate(buttonItem.path)}>
                         {buttonItem.title}
                       </Button>
                     ))}

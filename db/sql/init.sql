@@ -139,44 +139,9 @@ INSERT INTO quest (quest_id, nominate_guild_id, transaction_hash, title, descrip
   now()
 );
 
-INSERT INTO notice (title, body, public_key, created) VALUES (
-  "notice a",
-  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
-  "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
-  now()
-);
-
-INSERT INTO notice (title, body, public_key, created) VALUES (
-  "notice b notice b notice b notice b notice b notice b",
-  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
-  "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
-  now()
-);
-
-INSERT INTO notice (title, body, public_key, created) VALUES (
-  "notice c",
-  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
-  "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
-  now()
-);
-
-INSERT INTO notice (title, body, public_key, created) VALUES (
-  "notice d",
-  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
-  "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
-  now()
-);
-
-INSERT INTO notice (title, body, public_key, created) VALUES (
-  "notice e",
-  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
-  "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
-  now()
-);
-
-INSERT INTO notice (title, body, public_key, created) VALUES (
-  "notice c",
-  '{"questId":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
-  "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
-  now()
-);
+-- INSERT INTO notice (title, body, public_key, created) VALUES (
+--   "notice a",
+--   '{"quest_id":1,"worker_public_key":"8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D","message":"是非対応させてください！"}',
+--   "8742FBAA0EF24F273F49260459474EC5DBD4D04C481745616270573F1885FF7D",
+--   now()
+-- );

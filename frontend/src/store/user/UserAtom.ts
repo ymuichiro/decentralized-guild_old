@@ -7,7 +7,9 @@ export const userPublicAccountState = atom<PublicAccount | null>({
   default: null,
 });
 
-export const userInformationState = atom<components['schemas']['User'] | null>({
+export const userInformationState = atom<
+  components['schemas']['UserTable'] | null
+>({
   key: 'userInformationState',
   default: null,
 });

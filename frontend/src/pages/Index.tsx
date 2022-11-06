@@ -31,10 +31,8 @@ const Index = (): JSX.Element => {
     try {
       await AuthService.login();
       const res = await AuthService.getUser();
-
       if (res.data) {
         setUserInformation(res.data);
-
         navigate(ROUTER_PATHS.dashboard.path);
       } else {
         navigate(ROUTER_PATHS.join.path);

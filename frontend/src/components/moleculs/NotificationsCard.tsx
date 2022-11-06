@@ -10,43 +10,32 @@ import ListItemButton from '@components/atom/ListItemButton';
 import ScrollBox from '@components/atom/ScrollBox';
 import { ApiService } from '../../service/ApiService'
 import SystemService from '../../service/SystemService'
+
 type Props = {
-  user: components['schemas']['UserTable'] | null;
+  user: components['schemas']['UserTable'];
 };
 
 /**
  * ユーザーの基本情報を表示するカード
  */
 export default function NotificationsCard(props: Props): JSX.Element {
-  const [notifications, setNotifications] = useState<
-    components['schemas']['Notice'][]
-  >(
-    [/*
-    { title: "test data", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-    { title: "ttttt", body: "fakpoajtpotpa", created: 100000000, public_key: "xxxxxxxxxxxxxxx" },
-  */]
-  );
+
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState<
+    components['schemas']['NoticeTable'][]
+  >([]);
 
   useEffect(() => {
-    ApiService.getNotices({public_key: SystemService.getActivePublicAccount().publicKey})
-    .then((res)=>{
-      console.log(res.data);
-      setNotifications([...res.data])
-    })
+    ApiService.getNotices({ public_key: props.user?.public_key })
+      .then((res) => {
+        setNotifications([...res.data])
+      })
   }, []);
 
-  const onClickNotification = (item: components['schemas']['Notice']) => {
-    const notification: operations['orderRequestQuest']['requestBody']['content']['application/json'] = JSON.parse(item.body);
+  const onClickNotification = (item: components['schemas']['NoticeTable']) => {
+    // const notification: operations['orderRequestQuest']['requestBody']['content']['application/json'] = JSON.parse(item.body);
     // ここで取得できるのはquest_idだが、おそらく必要なのはnotice_idではないか、受注通知（onClickReceiveRequest）の段階でnotice_idは登録されていないように思われるが、深追いできなかったので断念
-    navigate('/quest-order-accept/' + notification.quest_id);
+    navigate('/quest-order-accept/' + item.notice_id);
   }
 
   return (

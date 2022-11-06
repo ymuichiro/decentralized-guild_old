@@ -176,22 +176,15 @@ export default function QuestDetailsRequestAccept(props: Props): JSX.Element {
               }}
             >
               <Typography variant='body1' textAlign='left'>
-                {props.quest?.description.repeat(100)}
-              </Typography>
-              <Typography variant='h5' textAlign='right' fontWeight='bold'>
-                Reward {props.quest?.reward.toLocaleString()} xym
+                {props.quest?.description}
               </Typography>
               <div style={{ height: '3rem' }} />
             </ScrollBox>
             <Grid container direction='row' spacing={3}>
-              <Grid item xs={6}>
-                <Button
-                  color={'primary'}
-                  onClick={() => props?.onSubmitHandle && props.onSubmitHandle()}
-                  style={{ width: "100%" }}
-                >
-                  受ける
-                </Button>
+              <Grid item xs={12}>
+                <Typography variant='h5' textAlign='right' fontWeight='bold'>
+                  Reward {props.quest?.reward.toLocaleString()} xym
+                </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Button
@@ -200,6 +193,15 @@ export default function QuestDetailsRequestAccept(props: Props): JSX.Element {
                   style={{ width: "100%" }}
                 >
                   閉じる
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  color={'primary'}
+                  onClick={() => props?.onSubmitHandle && props.onSubmitHandle()}
+                  style={{ width: "100%" }}
+                >
+                  受ける
                 </Button>
               </Grid>
             </Grid>

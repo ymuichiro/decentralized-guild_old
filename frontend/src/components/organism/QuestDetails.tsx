@@ -6,8 +6,8 @@ import Grid from '@components/atom/Grid';
 import Avatar from '@components/atom/Avatar';
 import Button from '@components/moleculs/Button';
 import Modal from '@mui/material/Modal';
-import { ApiService } from '@service/ApiService';
 import SystemService from '@service/SystemService';
+import { ApiService } from '@service/ApiService';
 import { useEffect, useState } from 'react';
 import { components, operations } from '../../@types/swagger';
 import { SymbolExplorerService } from '@service/SymbolExplorerService';
@@ -42,15 +42,17 @@ export default function QuestDetails(props: Props): JSX.Element {
     if (props.onClose) props.onClose();
   };
 
-  const onClickReceiveRequest = async () => {
+  const onClickReceiveRequest = () => {
     if (!props.quest?.quest_id) throw new Error('quest id is undefind');
     const body: operations['orderRequestQuest']['requestBody']['content']['application/json'] = {
       quest_id: props.quest.quest_id,
       worker_public_key: SystemService.getActivePublicAccount().publicKey,
       message: '是非やらせて下さい！'
     }
-    await ApiService.addOrderRequestQuestNotice(body);
-    if (props.onClose) props.onClose();
+    ApiService.addOrderRequestQuestNotice(body).then(() => {
+      alert("申請を完了しました。クエスト一覧に戻ります");
+      if (props.onClose) props.onClose();
+    }).catch((err: Error) => { alert(err.message) })
   }
 
   useEffect(() => {
@@ -59,7 +61,6 @@ export default function QuestDetails(props: Props): JSX.Element {
       ApiService.getUser({ public_key: props.quest.requester_public_key })
         .then((e) => {
           if (e.data && mounted) {
-            console.log(e.data);
             setRequester({ ...e.data });
           }
         })
@@ -192,17 +193,18 @@ export default function QuestDetails(props: Props): JSX.Element {
               }}
             >
               <Typography variant='body1' textAlign='left'>
-                {props.quest?.description.repeat(100)}
-              </Typography>
-              <Typography variant='h5' textAlign='right' fontWeight='bold'>
-                Reward {props.quest?.reward.toLocaleString()} xym
+                {props.quest?.description}
               </Typography>
               <div style={{ height: '3rem' }} />
             </ScrollBox>
             <Grid container direction='row' spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant='h5' textAlign='right' fontWeight='bold'>
+                  Reward {props.quest?.reward.toLocaleString()} xym
+                </Typography>
+              </Grid>
               <Grid item xs={6}>
                 <Button
-
                   color={'secondary'}
                   onClick={() => onClickModalCloseRequest()}
                   style={{ width: "100%" }}

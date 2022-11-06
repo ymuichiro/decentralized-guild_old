@@ -38,7 +38,7 @@ const Join = (): JSX.Element => {
       if (publicKey && email && name) {
         const res = await ApiService.addUser(o)
         if (res.data.status === "ok") {
-          rSetUserInfo(o)
+          rSetUserInfo({ ...o, created: new Date().getTime() })
           navigate(ROUTER_PATHS.dashboard.path);
         }
       } else {
