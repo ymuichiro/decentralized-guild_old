@@ -124,7 +124,7 @@ export default class SystemService {
           singedTransaction,
           signedHashLockTransaction,
         );
-        resolve(signedHashLockTransaction);
+        resolve(singedTransaction);
       }, 1000);
     });
   }
