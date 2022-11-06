@@ -15,9 +15,7 @@ export class SymbolExplorerService {
     }
     const base = type === NetworkType.MAIN_NET ? this.MAIN_NET : this.TEST_NET;
     const url = new URL(base);
-    path.forEach((p) => {
-      url.pathname = p;
-    });
+    url.pathname = path.join('/');
     return url.href;
   }
 
