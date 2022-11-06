@@ -105,7 +105,6 @@ export default class SystemService {
    */
   protected static async sendAggregateTransaction(
     transaction: AggregateTransaction,
-    node: NodeInfo,
     network: Network,
   ) {
     const singedTransaction = await this.sign(transaction);
