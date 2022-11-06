@@ -36,9 +36,6 @@ export default defineConfig({
       enforce: 'post',
     },
   ],
-  define: {
-    global: {},
-  },
   resolve: {
     alias: {
       ...stdLibBrowser,
