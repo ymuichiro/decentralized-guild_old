@@ -25,7 +25,6 @@ export default class QuestService extends SystemService {
     contractId: string,
     workerPublicKey: string,
     fee: SystemFee,
-    node: NodeInfo,
     network: Network,
   ): Promise<string> {
 
@@ -43,7 +42,6 @@ export default class QuestService extends SystemService {
     // アグボンアナウンス --> ハッシュロック
     const signedTransaction = await this.sendAggregateTransaction(
       aggregateTransaction,
-      node,
       network,
     );
 

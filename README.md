@@ -214,3 +214,62 @@ Githubのreadmeには審査員が詳細を把握できるよう以下のよう�
 ・application codeやその他のfile
 ・テスト手順を含むリポジトリへのリンク
 ・審査やテストのためにプロジェクトにアクセスする方法など
+
+# How to use
+## install SSS_extension
+<p>本ギルドシステムではSymbolブロックチェーンの署名をブラウザで行うためのSSS_Extension(Chorome拡張)が必要です。
+まずはインストールしてください。
+
+https://chrome.google.com/webstore/detail/sss-extension/llildiojemakefgnhhkmiiffonembcan?hl=ja
+
+ギルドで使用するアカウントをSSS_Extensionに追加してください。SSS_Extensionへのアカウント追加方法はこちらから<br />
+https://docs.sss-symbol.com/ja/UsersGuide/AccountSetting/
+</p>
+
+## Signe Up & Signe In
+<p>
+以下のページにアクセスしてください。<br />
+{{SingIn URL}}<br />
+
+[Connect Wallet]をクリックしSSS_Extensionにて署名しSignUpします。
+アカウントの情報はSSS_Extensionより自動的に取得しますのでメールアドレスのみご入力ください。
+
+<img width="897" alt="スクリーンショット 2022-11-06 10 27 19" src="https://user-images.githubusercontent.com/11351493/200161324-dd09d256-df00-49ec-b3d5-67e990df635b.png">
+<br />
+[Join Guild]をクリックするとSignUpは完了し、ダッシュボードに遷移します。
+
+アカウントが存在する場合は[Connect Wallet]でダッシュボードに遷移します。
+</p>
+
+## Request Quest
+*準備中
+
+## Work Quest
+<p>
+ダッシュボードの[New Job from Board]よりQuestBoardに遷移します。</p>
+<img width="1047" alt="スクリーンショット 2022-11-06 10 30 51" src="https://user-images.githubusercontent.com/11351493/200161399-53641fc0-3105-4244-a54a-07c57b89bb93.png">
+<br />
+<p>現在募集されているQuestが表示されますので、詳細を確認してください。</p>
+<img width="1006" alt="スクリーンショット 2022-11-06 10 33 24" src="https://user-images.githubusercontent.com/11351493/200161506-09279435-f5cf-4a66-828c-efe1d3072221.png">
+<br />
+<img width="787" alt="スクリーンショット 2022-11-06 10 35 42" src="https://user-images.githubusercontent.com/11351493/200161578-46aee256-2d47-4079-9e0e-fbf6636b0c56.png">
+<p>
+報酬や内容を確認し、受注したいQuestがあれば[受ける]をクリックすることで受注の依頼が行えます。</p>
+<b><i> この段階では受注完了ではありません。Requesterが承認して初めて受注完了となります。また、受注にはデポジットが必要です。これはQuestの完了時に返金されます。なお、自動的に徴収されるものではなく、Requesterが受注を承認し、Workerが署名をした段階でデポジットを預け、正式な受注となります。</i></b>
+</p>
+
+## Accept Worker
+<p>
+Requesterはダッシュボードで受注依頼が来ていないか確認できます。</p>
+<img width="1044" alt="スクリーンショット 2022-11-06 10 42 57" src="https://user-images.githubusercontent.com/11351493/200161854-5cf934dd-7ad5-4505-b7f5-0fbec03a290a.png">
+<p>
+通知をクリックするとQuestの詳細が表示され[受ける]をクリックすることで受注を承認できます。</p>
+<p><b><i>受注の承認には二度の署名、ならびにデポジットが必要です。これはQuest完了報告時に返金されますがSSSに表示される内容をよく確認し署名してください。受注の承認後、Workerが署名して初めて正式な受注となります。</i></b>
+</p>
+
+## Approve Quest
+*準備中
+## Establish Guild
+*準備中
+## Join Guild
+*準備中
