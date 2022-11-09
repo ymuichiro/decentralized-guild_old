@@ -1,4 +1,7 @@
 import { atom } from 'recoil';
+
+import { User } from '@models/User';
+
 import { components } from '../../@types/swagger';
 import { PublicAccount } from 'symbol-sdk/dist/src/model/account/PublicAccount';
 
